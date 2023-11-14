@@ -6,7 +6,10 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `bddR` is to …
+The goal of `bddR` is to provide [Gherkin
+syntax](https://cucumber.io/docs/gherkin/) helpers for [`testthat`’s
+`describe()` and `it()`
+functions](https://testthat.r-lib.org/reference/describe.html).
 
 ## Installation
 
@@ -40,7 +43,7 @@ testthat::test_that("
   ", code = {
   testthat::expect_true(TRUE)
 })
-#> Test passed 🎊
+#> Test passed 😀
 ```
 
 ``` r
@@ -67,7 +70,7 @@ class(my_feature)
 testthat::test_that(my_feature, code = {
   testthat::expect_true(TRUE)
 })
-#> Test passed 😸
+#> Test passed 🌈
 ```
 
 ``` r
@@ -86,7 +89,7 @@ testthat::describe(
       testthat::expect_true(TRUE)
     })
   })
-#> Test passed 🥳
+#> Test passed 😸
 ```
 
 ``` r
@@ -114,5 +117,5 @@ testthat::describe(
       testthat::expect_true(TRUE)
     })
   })
-#> Test passed 😸
+#> Test passed 😀
 ```

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `bddR` is to ...
+The goal of `bddR` is to provide [Gherkin syntax](https://cucumber.io/docs/gherkin/) helpers for [`testthat`'s `describe()` and `it()` functions](https://testthat.r-lib.org/reference/describe.html).
 
 ## Installation
 
