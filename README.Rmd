@@ -34,22 +34,23 @@ library(bddR)
 ```
 
 
-```{r testthat, eval=FALSE}
+```{r testthat, eval=TRUE}
 if (!require(pak)) {
-   install.packages("pak", 
-     repos = "http://cran.us.r-project.org")
+  install.packages("pak",
+    repos = "http://cran.us.r-project.org"
+  )
 }
-pak::pak("testthat")
+pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
 library(testthat)
 ```
 
-## Feature 
+## Features
 
 Adding [Gherkin keywords](https://cucumber.io/docs/gherkin/reference/) to `describe()` and `it()` can be tiresome. 
 
 ```{r}
-testthat::test_that("
-  Feature:
+test_that("
+  Feature: Visualization
 	  As a user
 	  I want to see the changes in the plot
 	  So that I can visualize the impact of my customizations
@@ -62,108 +63,146 @@ testthat::test_that("
 
 ```{r}
 feature(
-    As_a = "user",
-    I_want = "to see the changes in the plot", 
-   So_that = "I can visualize the impact of my customizations")
+  title = "Visualization",
+  as_a = "user",
+  i_want = "to see the changes in the plot",
+  so_that = "I can visualize the impact of my customizations"
+)
 ```
 
 It returns a `glue`/`character` string:
 
 ```{r}
-class(feature(
-    As_a = "user",
-    I_want = "to see the changes in the plot", 
-   So_that = "I can visualize the impact of my customizations"))
+class(
+  feature(
+    title = "Visualization",
+    as_a = "user",
+    i_want = "to see the changes in the plot",
+    so_that = "I can visualize the impact of my customizations"
+  )
+)
 ```
 
 So it can be dropped into a test `description`:
 
 ```{r}
-testthat::test_that(
+test_that(
   feature(
-    As_a = "user",
-    I_want = "to see the changes in the plot", 
-   So_that = "I can visualize the impact of my customizations"), code = {
-  testthat::expect_true(TRUE)
-})
+    title = "Visualization",
+    as_a = "user",
+    i_want = "to see the changes in the plot",
+    so_that = "I can visualize the impact of my customizations"
+  ),
+  code = {
+    expect_true(TRUE)
+  }
+)
 ```
 
-## Scenario 
+## Scenarios 
 
-Scenarios have `Given`, `When`, `Then` (and sometimes `And`) statements:
+Scenarios have a `title` with `given`, `when`, `then` (and sometimes `and`) statements:
 
 ```{r}
-testthat::describe(
+describe(
   feature(
-    As_a = "user",
-    I_want = "to see the changes in the plot", 
-   So_that = "I can visualize the impact of my customizations"), 
+    title = "Visualization",
+    as_a = "user",
+    i_want = "to see the changes in the plot",
+    so_that = "I can visualize the impact of my customizations"
+  ),
   code = {
     testthat::it("
-      Scenario: 
-          Given 
-          When 
-          Then 
+      Scenario:
+          given
+          when
+          then
       ", code = {
       testthat::expect_true(TRUE)
     })
-  })
+  }
+)
 ```
 
 
 
 ```{r}
-testthat::describe(
-    feature(As_a = "user",
-            I_want = "to see the changes in the plot", 
-            So_that = "I can visualize the impact of my customizations"),
+describe(
+  feature(
+    title = "Visualization",
+    as_a = "user",
+    i_want = "to see the changes in the plot",
+    so_that = "I can visualize the impact of my customizations"
+  ),
   code = {
-    testthat::it(
-      scenario(Given = "I have launched the application",
-         When = "I interact with the sidebar controls",
-         Then = "the graph should update with the selected options"),
+    it(
+      scenario(
+        title = "Viewing the Data Visualization",
+        given = "I have launched the application",
+        when = "I interact with the sidebar controls",
+        then = "the graph should update with the selected options"
+      ),
       code = {
-      testthat::expect_true(TRUE)
-    })
-  })
+        testthat::expect_true(TRUE)
+      }
+    )
+  }
+)
 ```
 
-We can add an `And` statement for more background/context:
+We can add an `and` statement for more background/context:
 
 ```{r}
-testthat::describe(
-    feature(As_a = "user",
-            I_want = "to see the changes in the plot", 
-            So_that = "I can visualize the impact of my customizations"),
+describe(
+  feature(
+    title = "Visualization",
+    as_a = "user",
+    i_want = "to see the changes in the plot",
+    so_that = "I can visualize the impact of my customizations"
+  ),
   code = {
-    testthat::it(
-      scenario(Given = "I have launched the application",
-               And = "it contains movie review data from IMDB and Rotten Tomatoes",
-               When = "I interact with the sidebar controls",
-               Then = "the graph should update with the selected options"),
+    it(
+      scenario(
+        title = "Viewing the Data Visualization",
+        given = "I have launched the application",
+        and = "it contains movie review data from IMDB and Rotten Tomatoes",
+        when = "I interact with the sidebar controls",
+        then = "the graph should update with the selected options"
+      ),
       code = {
-      testthat::expect_true(TRUE)
-    })
-  })
+        testthat::expect_true(TRUE)
+      }
+    )
+  }
+)
 ```
 
-More than one `And`? Just drop them in a `list()`:
+More than one `and`? Just drop them in a `list()`:
 
 ```{r}
-testthat::describe(
-  feature(As_a = "user",
-            I_want = "to see the changes in the plot", 
-            So_that = "I can visualize the impact of my customizations"), 
+describe(
+  feature(
+    title = "Visualization",
+    as_a = "user",
+    i_want = "to see the changes in the plot",
+    so_that = "I can visualize the impact of my customizations"
+  ),
   code = {
-    testthat::it(
-      scenario(Given = "I have launched the application",
-               And = list("it contains movie review data from IMDB and Rotten Tomatoes",
-                          "the data contains variables like 'Critics Score' and 'MPAA'"),
-               When = "I interact with the sidebar controls",
-               Then = "the graph should update with the selected options"),
+    it(
+      scenario(
+        title = "Viewing the Data Visualization",
+        given = "I have launched the application",
+        and = list(
+          "it contains movie review data from IMDB and Rotten Tomatoes",
+          "the data contains variables like 'Critics Score' and 'MPAA'"
+        ),
+        when = "I interact with the sidebar controls",
+        then = "the graph should update with the selected options"
+      ),
       code = {
-      testthat::expect_true(TRUE)
-    })
-  })
+        testthat::expect_true(TRUE)
+      }
+    )
+  }
+)
 ```
-

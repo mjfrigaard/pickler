@@ -4,34 +4,45 @@
 \alias{scenario}
 \title{BDD scenario}
 \usage{
-scenario(Given, When, Then, ...)
+scenario(title, given, when, then, ...)
 }
 \arguments{
-\item{Given}{Some initial context}
+\item{title}{Scenario title}
 
-\item{When}{An action occurs}
+\item{given}{Preconditions or initial context}
 
-\item{Then}{The expected outcome or behavior}
+\item{when}{An action occurs}
 
-\item{And}{additional 'And' arguments}
+\item{then}{The expected outcome or behavior}
+
+\item{and}{additional 'and' arguments}
 }
 \value{
 A BDD scenario
 }
 \description{
-BDD scenario
+Scenarios illustrate a concrete example of a specific behavior.
 }
+\section{Keywords}{
+
+Scenarios include 'Given', 'When', and 'Then' keywords (and sometimes
+additional 'And' statements).
+}
+
 \examples{
-scenario(Given = "I have launched the application",
-         When = "I interact with the sidebar controls",
-         Then = "the graph should update with the selected options")
-scenario(Given = "I have launched the application",
-         And = "it contains movie review data from IMDB and Rotten Tomatoes",
-         When = "I interact with the sidebar controls",
-         Then = "the graph should update with the selected options")
-scenario(Given = "I have launched the application",
-         And = list("it contains movie review data from IMDB and Rotten Tomatoes",
+scenario(title = "Viewing the Data Visualization",
+         given = "I have launched the application",
+         when = "I interact with the sidebar controls",
+         then = "the graph should update with the selected options")
+scenario(title = "Viewing the Data Visualization",
+         given = "I have launched the application",
+         and = "it contains movie review data from IMDB and Rotten Tomatoes",
+         when = "I interact with the sidebar controls",
+         then = "the graph should update with the selected options")
+scenario(title = "Viewing the Data Visualization",
+         given = "I have launched the application",
+         and = list("it contains movie review data from IMDB and Rotten Tomatoes",
                     "the data contains variables like 'Critics Score' and 'MPAA'"),
-         When = "I interact with the sidebar controls",
-         Then = "the graph should update with the selected options")
+         when = "I interact with the sidebar controls",
+         then = "the graph should update with the selected options")
 }

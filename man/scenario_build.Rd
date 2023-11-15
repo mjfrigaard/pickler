@@ -4,16 +4,16 @@
 \alias{scenario_build}
 \title{BDD scenario (build)}
 \usage{
-scenario_build(Given, When, Then, And = NULL)
+scenario_build(title, given, when, then, and = NULL)
 }
 \arguments{
-\item{Given}{Some initial context}
+\item{given}{Some initial context}
 
-\item{When}{An action occurs}
+\item{when}{An action occurs}
 
-\item{Then}{The expected outcome or behavior}
+\item{then}{The expected outcome or behavior}
 
-\item{And}{additional 'And' arguments}
+\item{and}{additional 'and' arguments}
 }
 \value{
 A BDD scenario

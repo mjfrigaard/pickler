@@ -1,33 +1,41 @@
 #' BDD Feature (build)
 #'
-#' @param As_a "As a" <user/stakeholder>
-#' @param I_want "I want" <to perform some action>
-#' @param So_that "So that" <I can reach some business goal>
+#' @param title Feature title
+#' @param as_a "As a" <user/stakeholder>
+#' @param i_want "I want" <to perform some action>
+#' @param so_that "So that" <I can reach some business goal>
 #'
 #' @return A feature (based on [Gherkin](https://cucumber.io/docs/gherkin/) syntax)
 #'
 #' @keywords internal
 #'
-feature_build <- function(As_a, I_want, So_that) {
-    c("\t Feature:\n\t  As a ", As_a, "\n\t  I want ", I_want, "\n\t  So that ", So_that)
+feature_build <- function(title, as_a, i_want, so_that) {
+    # c("Feature:", title, "\n  As a ", as_a, "\n  I want ", i_want, "\n  So that ", so_that)
+    glue::glue("
+              Feature: {title}
+                As a {as_a}
+                I want {i_want}
+                So that {so_that}")
 }
 
 #' BDD Feature
 #'
-#' @param As_a As a <user or stakeholder>
-#' @param I_want I want <to perform an action>
-#' @param So_that So that <I can reach business goal or deliver value>
+#' @param title Feature title
+#' @param as_a "As a <user or stakeholder>"
+#' @param i_want "I want <to perform an action>"
+#' @param so_that "So that <I can reach business goal or deliver value>"
 #'
-#' @return A feature
+#' @return A feature (based on [Gherkin](https://cucumber.io/docs/gherkin/) syntax)
 #'
 #' @export feature
 #'
 #' @examples
-#' feature(As_a = "user",
-#'     I_want = "to see the changes in the plot",
-#'     So_that = "I can visualize the impact of my customizations")
-feature <- function(As_a, I_want, So_that) {
+#' feature(title = "Visualization",
+#'         as_a = "user",
+#'         i_want = "to see the changes in the plot",
+#'         so_that = "I can visualize the impact of my customizations")
+feature <- function(title, as_a, i_want, so_that) {
   glue::glue_collapse(
-    feature_build(As_a = As_a, I_want = I_want, So_that = So_that)
+    feature_build(title = title, as_a = as_a, i_want = i_want, so_that = so_that)
   )
 }

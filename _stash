@@ -1,0 +1,108 @@
+Write a Gherkin Feature and a set of Scenarios for the following R function:
+
+```r
+sep_cols_mult <- function(data, col, pattern = "[^[:alnum:]]+", col_prefix){
+  # use regex for pattern, or whatever is provided
+  in_rgx <- pattern
+  # ensure data is a data.frame
+  in_data <- as.data.frame(data)
+  # ensure col is a character vector
+  in_col <- as.character(col)
+
+  # split columns into a list of vectors
+  split_data <- strsplit(in_data[[in_col]], in_rgx)
+
+  # find the maximum number of elements in any split
+  max_length <- max(sapply(split_data, length))
+
+  # pad the vectors in the list with NAs to have uniform length
+  padded_split_data <- lapply(split_data, function(x) {
+    c(x, rep(NA, max_length - length(x)))
+  })
+
+  # convert the list of vectors to a matrix
+  out_cols <- do.call(rbind, padded_split_data)
+
+  # assign column names
+  colnames(out_cols) <- paste(col_prefix, seq_len(max_length), sep = "_")
+
+  # convert to data.frame
+  out_cols_df <- as.data.frame(out_cols, stringsAsFactors = FALSE)
+
+  # bind cols together
+  out_data <- cbind(in_data, out_cols_df)
+
+  # return the final data frame
+  return(out_data)
+}
+```
+
+
+```Gherkin
+Feature: Separate single column into multiple based on pattern
+  As a user of sep_cols_mult()
+  # or 'As a user of the package containing sep_cols_mult()'
+  I want to specify a separate column and a pattern to separate on
+  So that a resulting dataframe contains the new separated columns.
+
+  Scenario Outline: Split column with default pattern
+    Given a dataframe with text data
+    And a specified column "<column_name>"
+    When I split the column with the default pattern
+    And a column prefix "<col_prefix>"
+    Then the column should be split into multiple columns
+    And the resulting dataframe should have the original data with added split columns
+    And the new columns should have names with the provided prefix and an index
+
+    Examples:
+      | column_name | col_prefix |
+      | "text"      | "split"    |
+      | "details"   | "part"     |
+
+  Scenario Outline: Split column with custom pattern
+    Given a dataframe with text data
+    And a specified column "<column_name>"
+    When I split the column with a custom pattern "<pattern>"
+    And a column prefix "<col_prefix>"
+    Then the column should be split according to the custom pattern
+    And the resulting dataframe should have the original data with added split columns
+    And the new columns should have names with the provided prefix and an index
+
+    Examples:
+      | column_name | pattern | col_prefix |
+      | "text"      | "\\s+"  | "word"     |
+      | "codes"     | "-"     | "code"     |
+
+  Scenario: Handle non-text data
+    Given a dataframe with non-text data in the specified column
+    And a specified column "values"
+    When I try to split the column with the default pattern
+    Then the function should return an error
+
+  Scenario: Handle non-existent column
+    Given a dataframe with text data
+    And a non-existent column "fake_column"
+    When I try to split the column with the default pattern
+    Then the function should return an error
+
+  Scenario: Handle empty column prefix
+    Given a dataframe with text data
+    And a specified column "text"
+    When I split the column with the default pattern
+    And an empty column prefix
+    Then the function should return an error
+
+  Scenario: Split column with numeric data treated as text
+    Given a dataframe with numeric data in the specified column
+    And a specified column "numbers"
+    When I split the column with the default pattern treating numbers as text
+    Then the column should be split into multiple numeric columns
+    And the resulting dataframe should have the original data with added split numeric columns
+
+  Scenario: Split column with missing values
+    Given a dataframe with text data and missing values in the specified column
+    And a specified column "text"
+    When I split the column with the default pattern
+    Then the missing values should be handled gracefully
+    And the resulting dataframe should have the original data with added split columns including NAs where appropriate
+```

@@ -4,17 +4,19 @@
 \alias{feature_build}
 \title{BDD Feature (build)}
 \usage{
-feature_build(As_a, I_want, So_that)
+feature_build(title, as_a, i_want, so_that)
 }
 \arguments{
-\item{As_a}{"As a" <user/stakeholder>}
+\item{title}{Feature title}
 
-\item{I_want}{"I want" <to perform some action>}
+\item{as_a}{"As a" <user/stakeholder>}
 
-\item{So_that}{"So that" <I can reach some business goal>}
+\item{i_want}{"I want" \if{html}{\out{<to perform some action>}}}
+
+\item{so_that}{"So that" \if{html}{\out{<I can reach some business goal>}}}
 }
 \value{
-A feature (based on [Gherkin](https://cucumber.io/docs/gherkin/) syntax)
+A feature (based on \href{https://cucumber.io/docs/gherkin/}{Gherkin} syntax)
 }
 \description{
 BDD Feature (build)

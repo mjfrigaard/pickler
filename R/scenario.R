@@ -1,59 +1,113 @@
 #' BDD scenario (build)
 #'
-#' @param Given Some initial context
-#' @param When An action occurs
-#' @param Then The expected outcome or behavior
-#' @param And additional 'And' arguments
+#' @param given Some initial context
+#' @param when An action occurs
+#' @param then The expected outcome or behavior
+#' @param and additional 'and' arguments
 #'
 #' @return A BDD scenario
 #'
 #' @keywords internal
 #'
-scenario_build <- function(Given, When, Then, And = NULL) {
-  if (is.null(And)) {
-    c("\t Scenario:\n\t  Given ", Given, "\n\t  When ", When, "\n\t  Then ", Then)
-  } else if (length(And) == 1) {
-    c("\t Scenario:\n\t  Given ", Given, "\n\t  And ", And, "\n\t  When ", When, "\n\t  Then ", Then)
+scenario_build <- function(title, given, when, then, and = NULL) {
+  if (is.null(and)) {
+    glue::glue("
+        Scenario: {title}
+          Given {given}
+          When {when}
+          Then {then}")
+  } else if (length(and) == 1) {
+    glue::glue("
+        Scenario: {title}
+          Given {given}
+          When {when}
+          And {and}
+          Then {then}
+               ")
   } else {
-    ands_list <- lapply("And ", paste0, And)
-    ands_vector <- unlist(ands_list)
-    ands_clean <- paste0("  ", ands_vector, collapse =  "\n\t")
-    c("\t Scenario:\n\t  Given ", Given, "\n\t", ands_clean, "\n\t  When ", When, "\n\t  Then ", Then)
+    add_ands_list <- lapply("And ", paste0, and)
+    add_ands_vector <- unlist(add_ands_list)
+    ands_chr <- as.character(glue::glue("{add_ands_vector}"))
+    ands <- paste0(ands_chr, collapse = "\n  ")
+    glue::glue("
+        Scenario: {title}
+          Given {given}
+          When {when}
+          {ands}
+          Then {then}
+          ")
   }
 
 }
-# scenario_build(Given = "I have launched the application",
-#                And = list("it contains movie review data from IMDB and Rotten Tomatoes",
-#                           "the data contains variables like 'Critics Score' and 'MPAA'"),
-#                When = "I interact with the sidebar controls",
-#                Then = "the graph should update with the selected options")
+
+# title <- "Viewing the Data Visualization"
+# given <- "I have launched the application"
+# and <- c("it contains movie review data from IMDB and Rotten Tomatoes",
+#           "the data contains variables like 'Critics Score' and 'MPAA'")
+# when <- "I interact with the sidebar controls"
+# then <- "the graph should update with the selected options"
+#
+# ands_want <- c("  And it contains movie review data from IMDB and Rotten Tomatoes",
+#   "  And the data contains variables like 'Critics Score' and 'MPAA'")
+#
+# add_ands_list <- lapply("And ", paste0, and)
+# add_ands_vector <- unlist(add_ands_list)
+# ands_chr <- as.character(glue::glue("
+#                   {add_ands_vector}
+#                   "))
+# ands <- paste0(ands_chr, collapse = "\n    ")
+# glue::glue("
+#            Scenario: {title}
+#              Given {given}
+#              When {when}
+#              {ands}
+#              Then {then}
+#          ")
+# scenario_build(title = "Viewing the Data Visualization",
+#          given = "I have launched the application",
+#          and = list("it contains movie review data from IMDB and Rotten Tomatoes",
+#                     "the data contains variables like 'Critics Score' and 'MPAA'"),
+#          when = "I interact with the sidebar controls",
+#          then = "the graph should update with the selected options")
 
 #' BDD scenario
 #'
-#' @param Given Some initial context
-#' @param When An action occurs
-#' @param Then The expected outcome or behavior
-#' @param And additional 'And' arguments
+#' @description
+#' Scenarios illustrate a concrete example of a specific behavior.
+#'
+#' @section Keywords:
+#' Scenarios include 'Given', 'When', and 'Then' keywords (and sometimes
+#' additional 'And' statements).
+#'
+#'
+#' @param title Scenario title
+#' @param given Preconditions or initial context
+#' @param when An action occurs
+#' @param then The expected outcome or behavior
+#' @param and additional 'and' arguments
 #'
 #' @return A BDD scenario
 #'
 #' @export scenario
 #'
 #' @examples
-#' scenario(Given = "I have launched the application",
-#'          When = "I interact with the sidebar controls",
-#'          Then = "the graph should update with the selected options")
-#' scenario(Given = "I have launched the application",
-#'          And = "it contains movie review data from IMDB and Rotten Tomatoes",
-#'          When = "I interact with the sidebar controls",
-#'          Then = "the graph should update with the selected options")
-#' scenario(Given = "I have launched the application",
-#'          And = list("it contains movie review data from IMDB and Rotten Tomatoes",
+#' scenario(title = "Viewing the Data Visualization",
+#'          given = "I have launched the application",
+#'          when = "I interact with the sidebar controls",
+#'          then = "the graph should update with the selected options")
+#' scenario(title = "Viewing the Data Visualization",
+#'          given = "I have launched the application",
+#'          and = "it contains movie review data from IMDB and Rotten Tomatoes",
+#'          when = "I interact with the sidebar controls",
+#'          then = "the graph should update with the selected options")
+#' scenario(title = "Viewing the Data Visualization",
+#'          given = "I have launched the application",
+#'          and = list("it contains movie review data from IMDB and Rotten Tomatoes",
 #'                     "the data contains variables like 'Critics Score' and 'MPAA'"),
-#'          When = "I interact with the sidebar controls",
-#'          Then = "the graph should update with the selected options")
-scenario <- function(Given, When, Then, ...) {
+#'          when = "I interact with the sidebar controls",
+#'          then = "the graph should update with the selected options")
+scenario <- function(title, given, when, then, ...) {
   glue::glue_collapse(
-      scenario_build(Given = Given, When = When, Then = Then, ...)
+      scenario_build(title = title, given = given, when = when, then = then, ...)
     )
 }

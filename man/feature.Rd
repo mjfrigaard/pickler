@@ -4,23 +4,26 @@
 \alias{feature}
 \title{BDD Feature}
 \usage{
-feature(As_a, I_want, So_that)
+feature(title, as_a, i_want, so_that)
 }
 \arguments{
-\item{As_a}{As a <user or stakeholder>}
+\item{title}{Feature title}
 
-\item{I_want}{I want <to perform an action>}
+\item{as_a}{"As a \if{html}{\out{<user or stakeholder>}}"}
 
-\item{So_that}{So that <I can reach business goal or deliver value>}
+\item{i_want}{"I want \if{html}{\out{<to perform an action>}}"}
+
+\item{so_that}{"So that \if{html}{\out{<I can reach business goal or deliver value>}}"}
 }
 \value{
-A feature
+A feature (based on \href{https://cucumber.io/docs/gherkin/}{Gherkin} syntax)
 }
 \description{
 BDD Feature
 }
 \examples{
-feature(As_a = "user",
-    I_want = "to see the changes in the plot",
-    So_that = "I can visualize the impact of my customizations")
+feature(title = "Visualization",
+        as_a = "user",
+        i_want = "to see the changes in the plot",
+        so_that = "I can visualize the impact of my customizations")
 }
