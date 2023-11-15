@@ -24,7 +24,7 @@
 #' )
 bundle <- function(...) {
 
-  browser()
+  # browser()
 
     x <- list(...)
 
