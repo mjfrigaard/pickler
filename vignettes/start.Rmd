@@ -639,7 +639,7 @@ output_data = c("
 })
 ```
 
-And when it's placed in the test file, it passes!
+And when it's placed in the [test file](https://github.com/mjfrigaard/bddR/blob/main/tests/testthat/test-split_cols.R), it passes!
 
 ```{r , eval=FALSE}
 devtools:::test_active_file()
