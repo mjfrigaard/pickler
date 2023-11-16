@@ -83,161 +83,55 @@
 <span><span class="co">#&gt; ✔ Loading metadata database ... done</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ℹ No downloads are needed</span></span>
-<span><span class="co">#&gt; ✔ 1 pkg + 32 deps: kept 33 [8s]</span></span>
+<span><span class="co">#&gt; ✔ 1 pkg + 32 deps: kept 33 [8.2s]</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://testthat.r-lib.org" class="external-link">testthat</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>Adding <a href="https://cucumber.io/docs/gherkin/reference/" class="external-link">Gherkin keywords</a> to <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> and <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code> can be tiresome.</p>
+<p><code>testthat</code>’s BDD functions allow for more explicit descriptions of tests:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"</span></span>
-<span><span class="st">  Feature: Visualization</span></span>
-<span><span class="st">      As a user</span></span>
-<span><span class="st">      I want to see the changes in the plot</span></span>
-<span><span class="st">      So that I can visualize the impact of my customizations</span></span>
-<span><span class="st">  "</span>, code <span class="op">=</span> <span class="op">{</span></span>
-<span>  <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span>description <span class="op">=</span> <span class="st">"verify that you implement the right things"</span>, code <span class="op">=</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span>description <span class="op">=</span> <span class="st">"ensure you do the things right"</span>, code <span class="op">=</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Test passed</span></span></code></pre></div>
-<p><code><a href="reference/feature.html">feature()</a></code> allows you to simply fill in the arguments:</p>
+<p><code>bddR</code> provides a set of helpers for writing <a href="https://cucumber.io/docs/gherkin/reference/" class="external-link">Gherkin-style</a> features, backgrounds and scenarios which can be placed in <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> and <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/feature.html">feature</a></span><span class="op">(</span></span>
-<span>  title <span class="op">=</span> <span class="st">"Visualization"</span>,</span>
-<span>  as_a <span class="op">=</span> <span class="st">"user"</span>,</span>
-<span>  i_want <span class="op">=</span> <span class="st">"to see the changes in the plot"</span>,</span>
-<span>  so_that <span class="op">=</span> <span class="st">"I can visualize the impact of my customizations"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Feature: Visualization</span></span>
-<span><span class="co">#&gt;   As a user</span></span>
-<span><span class="co">#&gt;   I want to see the changes in the plot</span></span>
-<span><span class="co">#&gt;   So that I can visualize the impact of my customizations</span></span></code></pre></div>
-<p>It returns a <code>glue</code>/<code>character</code> string:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="reference/feature.html">feature</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"My function's feature"</span>,</span>
+<span>    as_a <span class="op">=</span> <span class="st">"user of this function"</span>,</span>
+<span>    i_want <span class="op">=</span> <span class="st">"to verify that I implemented the right thing"</span>,</span>
+<span>    so_that <span class="op">=</span> <span class="st">"to ensure I did the thing right"</span></span>
+<span>  <span class="op">)</span>, code <span class="op">=</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="reference/scenario.html">scenario</a></span><span class="op">(</span></span>
+<span>        title <span class="op">=</span> <span class="st">"Example of thing"</span>,</span>
+<span>        given <span class="op">=</span> <span class="st">"My package is installed and loaded"</span>,</span>
+<span>        when <span class="op">=</span> <span class="st">"I do something"</span>,</span>
+<span>        then <span class="op">=</span> <span class="st">"the right thing happens"</span></span>
+<span>      <span class="op">)</span>, code <span class="op">=</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Test passed</span></span></code></pre></div>
+<p><code>bddR</code> functions can also it can be dropped into the <code>desc</code> argument of <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/feature.html">feature</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Visualization"</span>,</span>
-<span>    as_a <span class="op">=</span> <span class="st">"user"</span>,</span>
-<span>    i_want <span class="op">=</span> <span class="st">"to see the changes in the plot"</span>,</span>
-<span>    so_that <span class="op">=</span> <span class="st">"I can visualize the impact of my customizations"</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "glue"      "character"</span></span></code></pre></div>
-<p>So it can be dropped into a test <code>description</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/feature.html">feature</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Visualization"</span>,</span>
-<span>    as_a <span class="op">=</span> <span class="st">"user"</span>,</span>
-<span>    i_want <span class="op">=</span> <span class="st">"to see the changes in the plot"</span>,</span>
-<span>    so_that <span class="op">=</span> <span class="st">"I can visualize the impact of my customizations"</span></span>
-<span>  <span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="reference/scenario.html">scenario</a></span><span class="op">(</span></span>
+<span>        title <span class="op">=</span> <span class="st">"Example of thing"</span>,</span>
+<span>        given <span class="op">=</span> <span class="st">"My package is installed and loaded"</span>,</span>
+<span>        when <span class="op">=</span> <span class="st">"I do something"</span>,</span>
+<span>        then <span class="op">=</span> <span class="st">"the right thing happens"</span></span>
+<span>      <span class="op">)</span>,</span>
 <span>  code <span class="op">=</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Test passed</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="scenarios">Scenarios<a class="anchor" aria-label="anchor" href="#scenarios"></a>
-</h2>
-<p>Scenarios have a <code>title</code> with <code>given</code>, <code>when</code>, <code>then</code> (and sometimes <code>and</code>) statements:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/feature.html">feature</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Visualization"</span>,</span>
-<span>    as_a <span class="op">=</span> <span class="st">"user"</span>,</span>
-<span>    i_want <span class="op">=</span> <span class="st">"to see the changes in the plot"</span>,</span>
-<span>    so_that <span class="op">=</span> <span class="st">"I can visualize the impact of my customizations"</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  code <span class="op">=</span> <span class="op">{</span></span>
-<span>    <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span><span class="st">"</span></span>
-<span><span class="st">      Scenario:</span></span>
-<span><span class="st">          given</span></span>
-<span><span class="st">          when</span></span>
-<span><span class="st">          then</span></span>
-<span><span class="st">      "</span>, code <span class="op">=</span> <span class="op">{</span></span>
-<span>      <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span>    <span class="op">}</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Test passed</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/feature.html">feature</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Visualization"</span>,</span>
-<span>    as_a <span class="op">=</span> <span class="st">"user"</span>,</span>
-<span>    i_want <span class="op">=</span> <span class="st">"to see the changes in the plot"</span>,</span>
-<span>    so_that <span class="op">=</span> <span class="st">"I can visualize the impact of my customizations"</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  code <span class="op">=</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="reference/scenario.html">scenario</a></span><span class="op">(</span></span>
-<span>        title <span class="op">=</span> <span class="st">"Viewing the Data Visualization"</span>,</span>
-<span>        given <span class="op">=</span> <span class="st">"I have launched the application"</span>,</span>
-<span>        when <span class="op">=</span> <span class="st">"I interact with the sidebar controls"</span>,</span>
-<span>        then <span class="op">=</span> <span class="st">"the graph should update with the selected options"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      code <span class="op">=</span> <span class="op">{</span></span>
-<span>        <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span>      <span class="op">}</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Test passed</span></span></code></pre></div>
-<p>We can add an <code>and</code> statement for more background/context:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/feature.html">feature</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Visualization"</span>,</span>
-<span>    as_a <span class="op">=</span> <span class="st">"user"</span>,</span>
-<span>    i_want <span class="op">=</span> <span class="st">"to see the changes in the plot"</span>,</span>
-<span>    so_that <span class="op">=</span> <span class="st">"I can visualize the impact of my customizations"</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  code <span class="op">=</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="reference/scenario.html">scenario</a></span><span class="op">(</span></span>
-<span>        title <span class="op">=</span> <span class="st">"Viewing the Data Visualization"</span>,</span>
-<span>        given <span class="op">=</span> <span class="st">"I have launched the application"</span>,</span>
-<span>        and <span class="op">=</span> <span class="st">"it contains movie review data from IMDB and Rotten Tomatoes"</span>,</span>
-<span>        when <span class="op">=</span> <span class="st">"I interact with the sidebar controls"</span>,</span>
-<span>        then <span class="op">=</span> <span class="st">"the graph should update with the selected options"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      code <span class="op">=</span> <span class="op">{</span></span>
-<span>        <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span>      <span class="op">}</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Test passed</span></span></code></pre></div>
-<p>More than one <code>and</code>? Just drop them in a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/feature.html">feature</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Visualization"</span>,</span>
-<span>    as_a <span class="op">=</span> <span class="st">"user"</span>,</span>
-<span>    i_want <span class="op">=</span> <span class="st">"to see the changes in the plot"</span>,</span>
-<span>    so_that <span class="op">=</span> <span class="st">"I can visualize the impact of my customizations"</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  code <span class="op">=</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="reference/scenario.html">scenario</a></span><span class="op">(</span></span>
-<span>        title <span class="op">=</span> <span class="st">"Viewing the Data Visualization"</span>,</span>
-<span>        given <span class="op">=</span> <span class="st">"I have launched the application"</span>,</span>
-<span>        and <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>          <span class="st">"it contains movie review data from IMDB and Rotten Tomatoes"</span>,</span>
-<span>          <span class="st">"the data contains variables like 'Critics Score' and 'MPAA'"</span></span>
-<span>        <span class="op">)</span>,</span>
-<span>        when <span class="op">=</span> <span class="st">"I interact with the sidebar controls"</span>,</span>
-<span>        then <span class="op">=</span> <span class="st">"the graph should update with the selected options"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      code <span class="op">=</span> <span class="op">{</span></span>
-<span>        <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span>      <span class="op">}</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Test passed</span></span></code></pre></div>
+<p>Check out the <a href="https://mjfrigaard.github.io/bddR/articles/start.html">Getting Started vignette</a> to learn more.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
