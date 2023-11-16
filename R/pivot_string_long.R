@@ -1,5 +1,7 @@
 #' Pivot a string into a data.frame (long)
 #'
+#' **This is a function for testing bddR.**
+#'
 #' @param string a character vector.
 #' @param sep separator pattern (set to `"[^[:alnum:]]+"`)
 #'

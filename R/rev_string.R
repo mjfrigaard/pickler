@@ -1,7 +1,10 @@
 #' Reverse strings (function for testing)
 #'
-#' An example function for testing and writing BDD feature, scenarios, and
-#' background (original code was adapted from [this StackOverflow post](https://stackoverflow.com/questions/56428360/modify-the-object-without-using-return-in-r-function))
+#' **This is a function for testing bddR.**
+#'
+#' @section More info:
+#'
+#' The original code for this function is from [this StackOverflow post](https://stackoverflow.com/questions/56428360/modify-the-object-without-using-return-in-r-function). I've included it because of it uses `deparse(substitute())` and `assign()` (which makes for interesting tests).
 #'
 #' @param string string
 #'

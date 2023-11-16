@@ -16,7 +16,7 @@ character}
 processed dataset
 }
 \description{
-Process names and text in dataset
+\strong{This is a function for testing bddR.}
 }
 \examples{
 str(process_text(datasets::CO2))

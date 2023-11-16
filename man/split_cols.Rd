@@ -19,7 +19,7 @@ split_cols(data, col, pattern = "[^[:alnum:]]+", col_prefix = "col")
 data.frame with split columns
 }
 \description{
-Split column into multiple columns
+\strong{This is a function for testing bddR.}
 }
 \examples{
 d <- data.frame(value = c(29L, 91L, 39L, 28L, 12L),

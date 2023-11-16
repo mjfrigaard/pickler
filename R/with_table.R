@@ -1,4 +1,6 @@
-#' Add table Gherkin sytax
+#' Add Gherkin-style table
+#'
+#' [Tables in Gherkin](https://cucumber.io/docs/gherkin/reference/#scenario-outline) are essentially markdown tables, so this is a wrapper for `knitr::kable(format = "pipe")`
 #'
 #' @param tbl data.frame or tibble
 #'

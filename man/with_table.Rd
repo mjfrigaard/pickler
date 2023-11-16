@@ -2,7 +2,7 @@
 % Please edit documentation in R/with_table.R
 \name{with_table}
 \alias{with_table}
-\title{Add table Gherkin sytax}
+\title{Add Gherkin-style table}
 \usage{
 with_table(tbl)
 }
@@ -13,7 +13,7 @@ with_table(tbl)
 a table in \code{knitr::kable(format = "pipe", align = "l")}
 }
 \description{
-Add table Gherkin sytax
+\href{https://cucumber.io/docs/gherkin/reference/#scenario-outline}{Tables in Gherkin} are essentially markdown tables, so this is a wrapper for \code{knitr::kable(format = "pipe")}
 }
 \examples{
 # with_table(data.frame(value = c(29L, 91L, 39L, 28L, 12L),

@@ -1,5 +1,7 @@
 #' Split column into multiple columns
 #'
+#' **This is a function for testing bddR.**
+#'
 #' @param data a `data.frame` or `tibble`
 #' @param col column to split
 #' @param pattern regular expression pattern passed to `strsplit()`

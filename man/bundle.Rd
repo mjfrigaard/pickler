@@ -10,14 +10,13 @@ bundle(...)
 \item{...}{features, scenarios, background, etc.}
 }
 \value{
-glue/character
+bundled features, scenarios, background, etc. to be passed into tests.
 }
 \description{
 Bundle BDD functions
 }
 \examples{
 bundle(
-  list(
   feature(title = "Visualization",
           as_a = "user",
           i_want = "to see the changes in the plot",
@@ -29,6 +28,5 @@ bundle(
            given = "I have launched the application",
            when = "I interact with the sidebar controls",
            then = "the graph should update with the selected options")
-  )
 )
 }

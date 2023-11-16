@@ -2,13 +2,12 @@
 #'
 #' @param ... features, scenarios, background, etc.
 #'
-#' @return glue/character
+#' @return bundled features, scenarios, background, etc. to be passed into tests.
 #'
 #' @export bundle
 #'
 #' @examples
 #' bundle(
-#'   list(
 #'   feature(title = "Visualization",
 #'           as_a = "user",
 #'           i_want = "to see the changes in the plot",
@@ -20,11 +19,8 @@
 #'            given = "I have launched the application",
 #'            when = "I interact with the sidebar controls",
 #'            then = "the graph should update with the selected options")
-#'   )
 #' )
 bundle <- function(...) {
-
-  # browser()
 
     x <- list(...)
 

@@ -1,5 +1,7 @@
 #' Process names and text in dataset
 #'
+#' **This is a function for testing bddR.**
+#'
 #' @param .data `data.frame`, `tibble`, or `data.table`
 #' @param fct convert factors to lowercase? If `TRUE`, factors are returned as
 #'     character

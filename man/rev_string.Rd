@@ -13,9 +13,14 @@ rev_string(string)
 reversed string
 }
 \description{
-An example function for testing and writing BDD feature, scenarios, and
-background (original code was adapted from \href{https://stackoverflow.com/questions/56428360/modify-the-object-without-using-return-in-r-function}{this StackOverflow post})
+\strong{This is a function for testing bddR.}
 }
+\section{More info}{
+
+
+The original code for this function is from \href{https://stackoverflow.com/questions/56428360/modify-the-object-without-using-return-in-r-function}{this StackOverflow post}. I've included it because of it uses \code{deparse(substitute())} and \code{assign()} (which makes for interesting tests).
+}
+
 \examples{
 ## NOT RUN
 # a <- "StackOverFlow"
