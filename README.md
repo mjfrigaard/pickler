@@ -37,66 +37,61 @@ pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
 #> ✔ Loading metadata database ... done
 #>  
 #> ℹ No downloads are needed
-#> ✔ 1 pkg + 32 deps: kept 33 [8s]
+#> ✔ 1 pkg + 32 deps: kept 33 [8.2s]
 library(testthat)
 ```
 
-## Features
+## Example
 
-Adding [Gherkin keywords](https://cucumber.io/docs/gherkin/reference/)
-to `describe()` and `it()` can be tiresome.
+`testthat`’s BDD functions allow for more explicit descriptions of
+tests:
 
 ``` r
-test_that("
-  Feature: Visualization
-      As a user
-      I want to see the changes in the plot
-      So that I can visualize the impact of my customizations
-  ", code = {
-  testthat::expect_true(TRUE)
+describe(description = "verify that you implement the right things", code = {
+  it(description = "ensure you do the things right", code = {
+    expect_true(TRUE)
+  })
 })
 #> Test passed
 ```
 
-`feature()` allows you to simply fill in the arguments:
+`bddR` provides a set of helpers for writing
+[Gherkin-style](https://cucumber.io/docs/gherkin/reference/) features,
+backgrounds and scenarios which can be placed in `describe()` and
+`it()`:
 
 ``` r
-feature(
-  title = "Visualization",
-  as_a = "user",
-  i_want = "to see the changes in the plot",
-  so_that = "I can visualize the impact of my customizations"
-)
-#> Feature: Visualization
-#>   As a user
-#>   I want to see the changes in the plot
-#>   So that I can visualize the impact of my customizations
-```
-
-It returns a `glue`/`character` string:
-
-``` r
-class(
+describe(
   feature(
-    title = "Visualization",
-    as_a = "user",
-    i_want = "to see the changes in the plot",
-    so_that = "I can visualize the impact of my customizations"
-  )
-)
-#> [1] "glue"      "character"
+    title = "My function's feature",
+    as_a = "user of this function",
+    i_want = "to verify that I implemented the right thing",
+    so_that = "to ensure I did the thing right"
+  ), code = {
+  it(
+    scenario(
+        title = "Example of thing",
+        given = "My package is installed and loaded",
+        when = "I do something",
+        then = "the right thing happens"
+      ), code = {
+    expect_true(TRUE)
+  })
+})
+#> Test passed
 ```
 
-So it can be dropped into a test `description`:
+`bddR` functions can also it can be dropped into the `desc` argument of
+`test_that()`:
 
 ``` r
 test_that(
-  feature(
-    title = "Visualization",
-    as_a = "user",
-    i_want = "to see the changes in the plot",
-    so_that = "I can visualize the impact of my customizations"
-  ),
+  scenario(
+        title = "Example of thing",
+        given = "My package is installed and loaded",
+        when = "I do something",
+        then = "the right thing happens"
+      ),
   code = {
     expect_true(TRUE)
   }
@@ -104,113 +99,6 @@ test_that(
 #> Test passed
 ```
 
-## Scenarios
-
-Scenarios have a `title` with `given`, `when`, `then` (and sometimes
-`and`) statements:
-
-``` r
-describe(
-  feature(
-    title = "Visualization",
-    as_a = "user",
-    i_want = "to see the changes in the plot",
-    so_that = "I can visualize the impact of my customizations"
-  ),
-  code = {
-    testthat::it("
-      Scenario:
-          given
-          when
-          then
-      ", code = {
-      testthat::expect_true(TRUE)
-    })
-  }
-)
-#> Test passed
-```
-
-``` r
-describe(
-  feature(
-    title = "Visualization",
-    as_a = "user",
-    i_want = "to see the changes in the plot",
-    so_that = "I can visualize the impact of my customizations"
-  ),
-  code = {
-    it(
-      scenario(
-        title = "Viewing the Data Visualization",
-        given = "I have launched the application",
-        when = "I interact with the sidebar controls",
-        then = "the graph should update with the selected options"
-      ),
-      code = {
-        testthat::expect_true(TRUE)
-      }
-    )
-  }
-)
-#> Test passed
-```
-
-We can add an `and` statement for more background/context:
-
-``` r
-describe(
-  feature(
-    title = "Visualization",
-    as_a = "user",
-    i_want = "to see the changes in the plot",
-    so_that = "I can visualize the impact of my customizations"
-  ),
-  code = {
-    it(
-      scenario(
-        title = "Viewing the Data Visualization",
-        given = "I have launched the application",
-        and = "it contains movie review data from IMDB and Rotten Tomatoes",
-        when = "I interact with the sidebar controls",
-        then = "the graph should update with the selected options"
-      ),
-      code = {
-        testthat::expect_true(TRUE)
-      }
-    )
-  }
-)
-#> Test passed
-```
-
-More than one `and`? Just drop them in a `list()`:
-
-``` r
-describe(
-  feature(
-    title = "Visualization",
-    as_a = "user",
-    i_want = "to see the changes in the plot",
-    so_that = "I can visualize the impact of my customizations"
-  ),
-  code = {
-    it(
-      scenario(
-        title = "Viewing the Data Visualization",
-        given = "I have launched the application",
-        and = list(
-          "it contains movie review data from IMDB and Rotten Tomatoes",
-          "the data contains variables like 'Critics Score' and 'MPAA'"
-        ),
-        when = "I interact with the sidebar controls",
-        then = "the graph should update with the selected options"
-      ),
-      code = {
-        testthat::expect_true(TRUE)
-      }
-    )
-  }
-)
-#> Test passed
-```
+Check out the [Getting Started
+vignette](https://mjfrigaard.github.io/bddR/articles/start.html) to
+learn more.
