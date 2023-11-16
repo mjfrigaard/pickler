@@ -374,7 +374,8 @@ cause errors</a>.:</p>
 <span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  Test passed</span></code></pre></div>
 <p>It clearer to use nested <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> and
 <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code> calls, because they can hold combinations of features,
-scenarios, or backgrounds. Below is an example feature(),
+scenarios, or backgrounds.</p>
+<p>Below is an example <code><a href="../reference/feature.html">feature()</a></code>,
 <code><a href="../reference/background.html">background()</a></code>, and <code><a href="../reference/scenario.html">scenario()</a></code> for
 <code><a href="../reference/split_cols.html">split_cols()</a></code></p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(</span>
@@ -398,7 +399,7 @@ scenarios, or backgrounds. Below is an example feature(),
 <span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Split column with a default pattern"</span>,</span>
 <span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">given =</span> <span class="st">"a dataframe [data] with a specified column [col]"</span>,</span>
 <span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">when =</span> <span class="st">"I split the [col] column using the default [[^[:alnum:]]+]"</span>,</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">then =</span> <span class="st">"Then the [col] column should be split into multiple columns"</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">then =</span> <span class="st">"the [col] column should be split into multiple columns"</span></span>
 <span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>      ), <span class="at">code =</span> {</span>
 <span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">expect_true</span>(<span class="cn">TRUE</span>)</span>
@@ -462,20 +463,32 @@ particular <code><a href="../reference/scenario.html">scenario()</a></code>:</p>
 <span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>               <span class="st">"a specified column [col]"</span>))</span>
 <span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>), <span class="at">code =</span> {</span>
 <span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">it</span>(</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># test scenario</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># test scenario 1</span></span>
 <span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scenario</span>(</span>
 <span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Split column with a default pattern"</span>,</span>
 <span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">given =</span> <span class="st">"a dataframe [data] with a specified column [col]"</span>,</span>
 <span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">when =</span> <span class="st">"I split the [col] column using the default [[^[:alnum:]]+]"</span>,</span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">then =</span> <span class="st">"Then the [col] column should be split into multiple columns"</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">then =</span> <span class="st">"the [col] column should be split into multiple columns"</span></span>
 <span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>      ), <span class="at">code =</span> {</span>
 <span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">expect_true</span>(<span class="cn">TRUE</span>)</span>
 <span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>  Test passed</span></code></pre></div>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">it</span>(</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># test scenario 2</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scenario</span>(</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Split column with a default pattern"</span>,</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">given =</span> <span class="st">"a dataframe [data] with a specified column [col]"</span>,</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">when =</span> <span class="st">"I split the [col] column using the default [[^[:alnum:]]+]"</span>,</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">then =</span> <span class="st">"the new columns should be named with the default prefix [cols_]"</span></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>      ), <span class="at">code =</span> {</span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>      <span class="fu">expect_true</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>  Test passed </span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>  Test passed</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="tables">Tables<a class="anchor" aria-label="anchor" href="#tables"></a>
@@ -515,8 +528,8 @@ include in a <code><a href="../reference/bundle.html">bundle()</a></code> with t
 <span>    title <span class="op">=</span> <span class="st">"Input dataframe with text data"</span>, </span>
 <span>    given <span class="op">=</span> <span class="st">"a dataframe [data] with text columns"</span>, </span>
 <span>    and <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>               <span class="st">"a column prefix [cols_]"</span>, </span>
-<span>               <span class="st">"a specified column [col]"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>               <span class="st">"a column prefix [name]"</span>, </span>
+<span>               <span class="st">"a specified column [name]"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  </span>
 <span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"</span></span>
 <span><span class="st">           |value |name                      |</span></span>
@@ -534,8 +547,8 @@ include in a <code><a href="../reference/bundle.html">bundle()</a></code> with t
     So that I can quickly generate multiple columns.
   Background: Input dataframe with text data
     Given a dataframe [data] with text columns
-    And a column prefix [cols_]
-    And a specified column [col]
+    And a column prefix [default]
+    And a specified column [name]
         
   
              |value |name                      |
@@ -563,9 +576,9 @@ include it with the <code>scenario</code>:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/bundle.html">bundle</a></span><span class="op">(</span></span>
 <span><span class="fu"><a href="../reference/scenario.html">scenario</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Split column with a default pattern"</span>,</span>
-<span>    given <span class="op">=</span> <span class="st">"a dataframe [data] with a specified column [col]"</span>,</span>
-<span>    when <span class="op">=</span> <span class="st">"I split the [col] column using the default [[^[:alnum:]]+]"</span>,</span>
-<span>    then <span class="op">=</span> <span class="st">"Then the [col] column should be split into multiple columns"</span>,</span>
+<span>    given <span class="op">=</span> <span class="st">"a dataframe [data] with a specified column [name]"</span>,</span>
+<span>    when <span class="op">=</span> <span class="st">"I split the [name] column using the default [[^[:alnum:]]+]"</span>,</span>
+<span>    then <span class="op">=</span> <span class="st">"Then the [name] column should be split into multiple columns"</span>,</span>
 <span>    and <span class="op">=</span> <span class="st">"the new columns should be named with the default prefix [cols_]"</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>output <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"</span></span>
@@ -586,8 +599,8 @@ or non-technical audiences:</p>
     So that I can quickly generate multiple columns.
   Background: Input dataframe with text data
     Given a dataframe [data] with text columns
-    And a column prefix [cols_]
-    And a specified column [col]
+    And a column prefix [default]
+    And a specified column [name]
         
   
              |value |name                      |
@@ -597,9 +610,9 @@ or non-technical audiences:</p>
              |3     |John, Jacob, Jingleheimer |
              
   Scenario: Split column with a default pattern
-    Given a dataframe [data] with a specified column [col]
-    When I split the [col] column using the default [[^[:alnum:]]+]
-    Then Then the [col] column should be split into multiple columns
+    Given a dataframe [data] with a specified column [name]
+    When I split the [name] column using the default [[^[:alnum:]]+]
+    Then the [name] column should be split into multiple columns
     And the new columns should be named with the default prefix [cols_]
   
                   |value |name                      |col_1 |col_2 |col_3        |
@@ -622,8 +635,8 @@ documented:</p>
 <span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Input dataframe with text data"</span>, </span>
 <span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">given =</span> <span class="st">"a dataframe [data] with text columns"</span>, </span>
 <span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">and =</span> <span class="fu">list</span>(</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>               <span class="st">"a column prefix [cols_]"</span>, </span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">"a specified column [col]"</span>)),</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>               <span class="st">"a column prefix [default]"</span>, </span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">"a specified column [name]"</span>)),</span>
 <span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">input =</span> <span class="fu">c</span>(<span class="st">"</span></span>
 <span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="st">           |value |name                      |</span></span>
@@ -637,9 +650,9 @@ documented:</p>
 <span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a> <span class="fu">bundle</span>(</span>
 <span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scenario</span>(</span>
 <span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Split column with a default pattern"</span>,</span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">given =</span> <span class="st">"a dataframe [data] with a specified column [col]"</span>,</span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">when =</span> <span class="st">"I split the [col] column using the default [[^[:alnum:]]+]"</span>,</span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">then =</span> <span class="st">"Then the [col] column should be split into multiple columns"</span>,</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">given =</span> <span class="st">"a dataframe [data] with a specified column [name]"</span>,</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">when =</span> <span class="st">"I split the [name] column using the default [[^[:alnum:]]+]"</span>,</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">then =</span> <span class="st">"the [name] column should be split into multiple columns"</span>,</span>
 <span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">and =</span> <span class="st">"the new columns should be named with the default prefix [cols_]"</span></span>
 <span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>  ),</span>
 <span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="at">output =</span> <span class="fu">c</span>(<span class="st">"</span></span>
