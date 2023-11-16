@@ -20,4 +20,4 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://mjfrigaard.github.io/bddR/
+URL: https://mjfrigaard.github.io/bddR/, https://github.com/mjfrigaard/bddR
