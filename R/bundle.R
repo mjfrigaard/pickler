@@ -90,7 +90,7 @@ bundle <- function(...) {
 #                "),
 # feature(
 #   title = "Separate single column into multiple based on pattern",
-#   as_a = "user of sep_cols_mult() ",
+#   as_a = "user of split_cols() ",
 #   i_want = "to specify a separate column and a pattern to separate on",
 #   so_that = "a resulting dataframe contains the new separated columns.")
 # )

@@ -4,7 +4,7 @@
 \alias{scenario}
 \title{BDD scenario}
 \usage{
-scenario(title, given, when, then, ...)
+scenario(title, given, when, then, and = NULL)
 }
 \arguments{
 \item{title}{Scenario title}
@@ -30,19 +30,11 @@ additional 'And' statements).
 }
 
 \examples{
-scenario(title = "Viewing the Data Visualization",
-         given = "I have launched the application",
-         when = "I interact with the sidebar controls",
-         then = "the graph should update with the selected options")
-scenario(title = "Viewing the Data Visualization",
-         given = "I have launched the application",
-         and = "it contains movie review data from IMDB and Rotten Tomatoes",
-         when = "I interact with the sidebar controls",
-         then = "the graph should update with the selected options")
-scenario(title = "Viewing the Data Visualization",
-         given = "I have launched the application",
-         and = list("it contains movie review data from IMDB and Rotten Tomatoes",
-                    "the data contains variables like 'Critics Score' and 'MPAA'"),
-         when = "I interact with the sidebar controls",
-         then = "the graph should update with the selected options")
+scenario(
+    title = "Split column with a default pattern",
+    given = "a dataframe with a specified column [name]",
+    when = "I split the [name] column using the default [pattern]",
+    then = "Then the [name] column should be split into multiple columns",
+    and = "the new columns should be named with the default prefix [cols]"
+  )
 }

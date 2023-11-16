@@ -1,0 +1,651 @@
+---
+title: "Getting started"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " ",
+  error = TRUE
+)
+```
+
+This vignette covers how to use `bddR` functions with [`testthat`'s `describe()` and `it()` functions](https://testthat.r-lib.org/reference/describe.html).
+
+```{r setup}
+library(bddR)
+```
+
+Make sure you have the latest version of `testthat` installed.
+
+```{r testthat, eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
+if (!require(pak)) {
+  install.packages("pak",
+    repos = "http://cran.us.r-project.org"
+  )
+}
+pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
+library(testthat)
+```
+
+## Motivation
+
+`bddR` was motivated by the latest recommendation from the `testthat` authors on moving the test scope to *within* the test (i.e., remove or reduce the need for code outside the call to `test_that()`).
+
+> ***To avoid code outside of `test_that()`:***
+> 
+> - ***Move file-scope logic to either narrower scope (just this test) or a broader scope (all files)***
+> 
+> - ***It's ok to copy and paste: test code doesn't have to be super dry. Obvious >> DRY***  - [Package Development Masterclass, posit::conf(2023)](https://github.com/posit-conf-2023/pkg-dev-masterclass/blob/main/materials/3-advanced-testing.pdf)
+
+Adopting test [fixtures, helpers, and setup](https://www.tidyverse.org/blog/2020/04/self-cleaning-test-fixtures/) files will address the first item in the list above, but `bddR` is mostly focused on the second item: making test obvious and clear. 
+
+## Behavior-driven development functions
+
+The behavior-driven development (BDD) [functions](https://testthat.r-lib.org/reference/describe.html) are excellent additions to the suite of testing tools provided by `testthat`. They work like so: 
+
+```{r}
+describe(description = "verify that you implement the right things", code = {
+  it(description = "ensure you do the things right", code = {
+    expect_true(TRUE)
+  })
+})
+```
+
+The great thing about `describe()` is that they can be *nested*: 
+
+```{r}
+describe(description = "decribe the right way to implement thing", code = {
+  describe(description = "verify that you implemented the right thing", code = {
+    it(description = "ensure you do the thing right", code = {
+      expect_true(TRUE)
+    })
+  })
+})
+```
+
+Each `it()` call is essentially identical to `test_that()`, but allows for a longer character string `description`. 
+
+## What to test 
+
+> ***Strive to test each behaviour in one and only one test. Then if that behaviour later changes you only need to update a single test*** - [What to test, R Packages, 2ed](https://r-pkgs.org/testing-design.html#what-to-test)
+
+`bddR` address the advice above by providing a set of [Gherkin-style syntax](https://cucumber.io/docs/gherkin/reference/) functions that can be palced in the `description` argument of `decribe()` or `it()`. The following sections walk through an example with the `split_cols()` function: 
+
+```{r , eval=FALSE}
+split_cols <- function(data, col, pattern = "[^[:alnum:]]+", col_prefix = "col"){
+
+  stopifnot("data must be a data.frame or tibble" = is.data.frame(data))
+  stopifnot("'col' must be a character" = is.character(pattern))
+  stopifnot("'col' must be a column in 'data'" = col %in% names(data))
+  stopifnot("'pattern' must be a character" = is.character(pattern))
+  stopifnot("col_prefix must be a character" = is.character(col_prefix))
+
+  in_rgx <- pattern
+  in_data <- as.data.frame(data)
+  in_col <- as.character(col)
+
+  split_data <- strsplit(in_data[[in_col]], in_rgx)
+  max_length <- max(sapply(split_data, length))
+
+  padded_split_data <- lapply(split_data, function(x) {
+    c(x, rep(NA, max_length - length(x)))
+  })
+
+  out_cols <- do.call(rbind, padded_split_data)
+  colnames(out_cols) <- paste(col_prefix, seq_len(max_length), sep = "_")
+  out_cols_df <- as.data.frame(out_cols, stringsAsFactors = FALSE)
+
+  cbind(in_data, out_cols_df)
+
+}
+```
+
+The three primary functions in `bddR` are `feature()`, `scenario()`, and `background()`.
+
+## Features 
+
+A feature is an independent unit or functionality in a system. All [Gherkin](https://cucumber.io/docs/gherkin/reference/) features have the following keywords: 
+
+```gherkin
+Feature: <title>
+  As a <person using the code>
+  I want <some action>
+  So that <desired behavior>
+```
+
+Using the language from `testthat`'s BDD functions above, a feature would be described like so:
+
+```gherkin
+Feature: My function's feature
+  As a user of this function
+  I want to verify that I implemented the right thing
+  So that I can ensure I did the thing right
+```
+
+The `split_cols()` function was written because the [`tidyr::separate_*()`](https://tidyr.tidyverse.org/reference/index.html#character-vectors) functions didn't quite give me the solution I was looking for on a previous project.
+
+If I were to write the purpose of the `split_cols()` in [Gherkin syntax](https://cucumber.io/docs/gherkin/reference/), it would look something like this: 
+
+```gherkin
+Feature: Split a single column into multiple columns using a pattern
+  As a user of split_cols()
+  I want to specify a column and a pattern 
+  So that I can quickly generate multiple columns.
+```
+
+The arguments in the `feature()` function match the Gherkin feature keywords:  
+
+```{r, eval=FALSE}
+feature(
+    title = ,
+    as_a = ,
+    i_want = ,
+    so_that = 
+  )
+```
+
+This pattern is similar for all `bddR` functions  (except the keywords have been converted to `snake_case` to align with the [`tidyverse` naming conventions](https://style.tidyverse.org/syntax.html#object-names)).
+
+The arguments also serve as prompts to fill out each keyword:
+
+```{r eval=FALSE}
+feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  )
+```
+
+In R Markdown, code blocks with `bddR` functions can set to `eval=TRUE` and `echo=FALSE` so the Gherkin syntax is rendered when the file is knitted: 
+
+```{r eval=TRUE, echo=FALSE}
+feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  )
+```
+
+The point of a feature is to accurately capture what we are trying
+to achieve with a function (or set of functions, application, package, etc.) 
+
+## Scenarios
+
+Scenarios are at the heart of BDD because they illustrate concrete examples of how the code in our package should behave. Scenarios are also great for communicating and documenting requirements, code, and tests in succinct, plain language:
+
+> ***"Examples play a primary role in BDD, simply because they're an extremely effective way of communicating clear, precise, and unambiguous requirements. Specifications written in natural language are, as it turns out, a terribly poor way of communicating requirements, because there's so much space for ambiguity, assumptions, and misunderstandings. Examples are a great way to overcome these limitations and clarify the requirements. Examples are also a great way to explore and expand your knowledge."*** - [BDD in Action, John Ferguson Smart](https://www.manning.com/books/bdd-in-action)
+
+Consider the scenario below for `split_cols()`:
+
+```gherkin
+  Scenario: Split column with a default pattern
+    Given a dataframe with a specified column "<column_name>"
+    When I split the "<column_name>" column using the default pattern
+    Then the "<column_name>" column should be split into multiple columns
+```
+
+Below is the same scenario in the `scenario()` function:
+
+```{r eval=FALSE}
+scenario(
+    title = "Split column with a default pattern",
+    given = "a dataframe [data] with a specified column [col]",
+    when = "I split the [col] column using the default [[^[:alnum:]]+]",
+    then = "Then the [col] column should be split into multiple columns"
+  )
+```
+
+When rendered, scenarios look like so:
+
+```{r eval=TRUE, echo=FALSE}
+scenario(
+    title = "Split column with a default pattern",
+    given = "a dataframe [data] with a specified column [col]",
+    when = "I split the [col] column using the default [[^[:alnum:]]+]",
+    then = "Then the [col] column should be split into multiple columns"
+  )
+```
+
+
+### And
+
+Scenarios can also include additional `and` statements after the `then` keyword to test multiple behaviors: 
+
+```{r , eval=FALSE}
+scenario(
+    title = "Split column with a default pattern",
+    given = "a dataframe [data] with a specified column [col]",
+    when = "I split the [col] column using the default [[^[:alnum:]]+]",
+    then = "Then the [col] column should be split into multiple columns",
+    and = "the new columns should be named with the default prefix [cols_]"
+  )
+```
+
+In Gherkin you'll occasionally see `And` keywords following the `Given` statement, but in `bddR` these are intended to be placed in the `background()` function:
+
+## Background 
+
+The `background()` function is used to provide context on any preexisting conditions (or state of the world) we're contending with. For example, consider the two Gherkin scenarios below: 
+
+```gherkin
+  Scenario: Split column with 'default' pattern
+    Given a dataframe with text data
+    And a specified column "<column_name>"
+    When I split the column with the default pattern
+    And a column prefix "<col_prefix>"
+    Then the column should be split into multiple columns
+    And the resulting dataframe should have the original data with added split columns
+    And the new columns should have names with the provided prefix and an index
+
+  Scenario: Split column with 'custom' pattern
+    Given a dataframe with text data
+    And a specified column "<column_name>"
+    When I split the column with a custom pattern "<pattern>"
+    And a column prefix "<col_prefix>"
+    Then the column should be split according to the custom pattern
+    And the resulting dataframe should have the original data with added split columns
+    And the new columns should have names with the provided prefix and an index
+```
+
+These scenarios have a lot of repetition--specifically, these lines: 
+
+
+```gherkin
+Given a dataframe with text data
+And a specified column "<column_name>"
+And a column prefix "<col_prefix>"
+```
+
+These `And` statements can be placed in the `background()` to removes repetition:
+
+```{r eval=FALSE}
+background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]"))
+```
+
+The nice thing about storing context in a `background()` means that any updates will only have to change in a single location.
+
+When rendered, the `background()` looks like this:
+
+```{r eval=TRUE, echo=FALSE}
+background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]"))
+```
+
+BDD tests should communicates the context and intended behaviors of a function, and provides a series of worked examples for how the code should be used. Writing BDD tests takes longer, but makes it easier for stakeholders and other developers to understand how the code in your package should be used (and tested).
+
+
+## Tests
+
+`bddR` functions can be placed in desc argument of a the `test_that()` test, but sometimes a multiline descriptions [can cause errors](https://github.com/r-lib/testthat/issues/1900#issue-1995181567).: 
+
+```{r}
+test_that(
+  feature(
+    title = "My function's feature",
+    as_a = "user of this function",
+    i_want = "to verify that I implemented the right thing",
+    so_that = "to ensure I did the thing right"
+  ),
+  code = {
+    expect_true(TRUE)
+  }
+)
+```
+
+It clearer to use nested `describe()` and `it()` calls, because they can hold combinations of features, scenarios, or backgrounds. Below is an example feature(), `background()`, and `scenario()` for `split_cols()`
+
+```{r}
+describe(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ), code = {
+    
+    describe(
+      background(
+        title = "Input dataframe with text data", 
+        given = "a dataframe [data] with text columns", 
+        and = list(
+                   "a column prefix [cols_]", 
+                   "a specified column [col]")), code = {
+    
+    it(
+      scenario(
+        title = "Split column with a default pattern",
+        given = "a dataframe [data] with a specified column [col]",
+        when = "I split the [col] column using the default [[^[:alnum:]]+]",
+        then = "Then the [col] column should be split into multiple columns"
+      ), code = {
+      
+      expect_true(TRUE)
+      
+    })
+  
+  })
+    
+})
+```
+
+## Bundling 
+
+Ideally, `bddR`'s functions are developed independently and then wrapped in a `bundle()` before passing to `testthat`'s BDD functions: 
+
+```{r , eval=FALSE}
+bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]"))
+)
+```
+
+This makes it easier to combine features and backgrounds into a single call:
+
+```{r , echo=FALSE, eval=TRUE}
+bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]"))
+)
+```
+
+This allows us to pass a feature and background `bundle()` to `describe()` and test separate `scenario()`s:
+
+```{r}
+describe(
+  # bundle feature and background
+  bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]"))
+), code = {
+    it(
+    # test scenario
+     scenario(
+        title = "Split column with a default pattern",
+        given = "a dataframe [data] with a specified column [col]",
+        when = "I split the [col] column using the default [[^[:alnum:]]+]",
+        then = "Then the [col] column should be split into multiple columns"
+      ), code = {
+      
+      expect_true(TRUE)
+      
+    })
+  
+  })
+```
+
+
+## Tables
+
+It's also possible to provide a table in a scenario or feature. Let's assume we have a small example of data that illustrates an example behavior for our `split_cols()` function (stored in `input_data`):
+
+```{r , echo=FALSE}
+input_data <- data.frame(
+  value = c(1L, 2L, 3L),
+  name = c(
+    "John", 
+    "John, Jacob",
+    "John, Jacob, Jingleheimer"
+  )
+)
+```
+
+```{r, comment="#>"}
+input_data
+```
+
+We can convert `input_data` to a Gherkin-style table using `with_table()`:
+
+```{r comment="#>"}
+with_table(input_data)
+```
+
+`with_table()` creates a slightly modified `knitr::kable(format = "pipe", align = "l")` table we can include in a `bundle()` with the `background` and `feature`:
+
+```{r , eval=FALSE}
+bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]")),
+  
+  input_data = c("
+                 |value |name                      |
+                 |------|--------------------------|
+                 |1     |John                      |
+                 |2     |John, Jacob               |
+                 |3     |John, Jacob, Jingleheimer |
+                 ")
+)
+```
+
+This makes it easier to view them in RMarkdown or Quarto files (with `echo` set to `FALSE`)
+
+```{r , echo=FALSE}
+bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]")),
+  
+  input_data = c("
+                 |value |name                      |
+                 |------|--------------------------|
+                 |1     |John                      |
+                 |2     |John, Jacob               |
+                 |3     |John, Jacob, Jingleheimer |
+                 ")
+)
+```
+
+If we know we know what we the output table should look like, we can include it with the `scenario`: 
+
+```{r , echo = FALSE}
+output_data <- 
+data.frame(value = 1:3, name = c("John", "John, Jacob", "John, Jacob, Jingleheimer"
+), col_1 = c("John", "John", "John"), col_2 = c(NA, "Jacob", 
+"Jacob"), col_3 = c(NA, NA, "Jingleheimer"))
+```
+
+```{r, comment="#>"}
+output_data
+```
+
+```{r , eval=FALSE, echo=TRUE}
+with_table(output_data)
+```
+
+```{r , eval=TRUE, echo=FALSE}
+with_table(output_data)
+```
+
+
+```{r , eval=FALSE}
+bundle(
+scenario(
+    title = "Split column with a default pattern",
+    given = "a dataframe [data] with a specified column [col]",
+    when = "I split the [col] column using the default [[^[:alnum:]]+]",
+    then = "Then the [col] column should be split into multiple columns",
+    and = "the new columns should be named with the default prefix [cols_]"
+  ),
+output_data = c("
+                |value |name                      |col_1 |col_2 |col_3        |
+                |------|--------------------------|------|------|-------------|
+                |1     |John                      |John  |NA    |NA           |
+                |2     |John, Jacob               |John  |Jacob |NA           |
+                |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |
+              ")
+)
+```
+
+Now our `background`, `feature`, `scenario` (and tables) are in the Gherkin-style format that can be placed in R Markdown and nicely rendered for stakeholders or non-technical audiences: 
+
+```{r , echo=FALSE}
+bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]")),
+  
+  input_data = c("
+                 |value |name                      |
+                 |------|--------------------------|
+                 |1     |John                      |
+                 |2     |John, Jacob               |
+                 |3     |John, Jacob, Jingleheimer |
+                 "),
+  scenario(
+      title = "Split column with a default pattern",
+      given = "a dataframe [data] with a specified column [col]",
+      when = "I split the [col] column using the default [[^[:alnum:]]+]",
+      then = "Then the [col] column should be split into multiple columns",
+      and = "the new columns should be named with the default prefix [cols_]"
+  ),
+output_data = c("
+                |value |name                      |col_1 |col_2 |col_3        |
+                |------|--------------------------|------|------|-------------|
+                |1     |John                      |John  |NA    |NA           |
+                |2     |John, Jacob               |John  |Jacob |NA           |
+                |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |
+              ")
+)
+```
+
+And our test file contains a fully scoped test with everything documented:
+
+```{r}
+describe(
+bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]")),
+  
+  input_data = c("
+                 |value |name                      |
+                 |------|--------------------------|
+                 |1     |John                      |
+                 |2     |John, Jacob               |
+                 |3     |John, Jacob, Jingleheimer |
+                 ")), code = {
+    
+it(
+ bundle(
+  scenario(
+      title = "Split column with a default pattern",
+      given = "a dataframe [data] with a specified column [col]",
+      when = "I split the [col] column using the default [[^[:alnum:]]+]",
+      then = "Then the [col] column should be split into multiple columns",
+      and = "the new columns should be named with the default prefix [cols_]"
+  ),
+output_data = c("
+                |value |name                      |col_1 |col_2 |col_3        |
+                |------|--------------------------|------|------|-------------|
+                |1     |John                      |John  |NA    |NA           |
+                |2     |John, Jacob               |John  |Jacob |NA           |
+                |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |
+              ")
+  ), code = {
+  
+  # create observed output
+  observed <- split_cols(data = input_data, col = 'name')
+  # compare against output_data
+  expect_equal(object = observed, expected = output_data)
+  
+})
+
+})
+```
+
+And when it's placed in the test file, it passes!
+
+```{r , eval=FALSE}
+devtools:::test_active_file()
+```
+
+```{verbatim}
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 1 ]
+```
+

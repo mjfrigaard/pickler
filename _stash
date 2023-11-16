@@ -1,7 +1,7 @@
 Write a Gherkin Feature and a set of Scenarios for the following R function:
 
 ```r
-sep_cols_mult <- function(data, col, pattern = "[^[:alnum:]]+", col_prefix){
+split_cols <- function(data, col, pattern = "[^[:alnum:]]+", col_prefix){
   # use regex for pattern, or whatever is provided
   in_rgx <- pattern
   # ensure data is a data.frame
@@ -40,8 +40,8 @@ sep_cols_mult <- function(data, col, pattern = "[^[:alnum:]]+", col_prefix){
 
 ```Gherkin
 Feature: Separate single column into multiple based on pattern
-  As a user of sep_cols_mult()
-  # or 'As a user of the package containing sep_cols_mult()'
+  As a user of split_cols()
+  # or 'As a user of the package containing split_cols()'
   I want to specify a separate column and a pattern to separate on
   So that a resulting dataframe contains the new separated columns.
 
@@ -79,11 +79,29 @@ Feature: Separate single column into multiple based on pattern
     When I try to split the column with the default pattern
     Then the function should return an error
 
+d <- data.frame(value = c(29L, 91L, 39L, 28L, 12L),
+                name = c("John", "John, Jacob",
+                         "John, Jacob, Jingleheimer",
+                         "Jingleheimer, Schmidt",
+                         "JJJ, Schmidt"))
+split_cols(data = d, col = "value", col_prefix = "vals")
+
   Scenario: Handle non-existent column
     Given a dataframe with text data
     And a non-existent column "fake_column"
     When I try to split the column with the default pattern
     Then the function should return an error
+
+d <- data.frame(value = c(29L, 91L, 39L, 28L, 12L),
+                name = c("John", "John, Jacob",
+                         "John, Jacob, Jingleheimer",
+                         "Jingleheimer, Schmidt",
+                         "JJJ, Schmidt"))
+split_cols(data = d, col = "Name", col_prefix = "names")
+
+mdat <- matrix(c(1,2,3, 11,12,13), nrow = 2, ncol = 3, byrow = TRUE,
+               dimnames = list(c("row1", "row2"),
+                               c("C.1", "C.2", "C.3")))
 
   Scenario: Handle empty column prefix
     Given a dataframe with text data
