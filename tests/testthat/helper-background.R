@@ -1,4 +1,4 @@
-input_data <- data.frame(
+input <- data.frame(
   value = c(1L, 2L, 3L),
   name = c(
     "John",
@@ -7,4 +7,4 @@ input_data <- data.frame(
   )
 )
 
-with_table(input_data)
+with_table(input)

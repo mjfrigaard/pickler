@@ -73,7 +73,7 @@ bundle <- function(...) {
 #                "a column prefix",
 #                "a specified column")),
 #
-# input_data = c("
+# input = c("
 #                |value |name                      |
 #                |------|--------------------------|
 #                |1     |John                      |
@@ -81,7 +81,7 @@ bundle <- function(...) {
 #                |3     |John, Jacob, Jingleheimer |
 #                "),
 #
-# output_data = c("
+# output = c("
 #                |value |name                      |
 #                |------|--------------------------|
 #                |1     |John                      |
