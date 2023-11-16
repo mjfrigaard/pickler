@@ -37,7 +37,7 @@ pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
 #> ✔ Loading metadata database ... done
 #>  
 #> ℹ No downloads are needed
-#> ✔ 1 pkg + 32 deps: kept 33 [8.2s]
+#> ✔ 1 pkg + 32 deps: kept 33 [7.9s]
 library(testthat)
 ```
 
@@ -63,14 +63,14 @@ backgrounds and scenarios which can be placed in `describe()` and
 ``` r
 describe(
   feature(
-    title = "My function's feature",
-    as_a = "user of this function",
+    title = "My thing's feature",
+    as_a = "user of this thing",
     i_want = "to verify that I implemented the right thing",
-    so_that = "to ensure I did the thing right"
+    so_that = "I'm sure I did the thing right"
   ), code = {
   it(
     scenario(
-        title = "Example of thing",
+        title = "Example of using thing",
         given = "My package is installed and loaded",
         when = "I do something",
         then = "the right thing happens"
