@@ -1,17 +1,17 @@
 describe(
-bundle(
-  feature(
+  bundle(
+    feature(
     title = "Split a single column into multiple columns using a pattern",
     as_a = "user of split_cols()",
     i_want = "to specify a column and a pattern",
     so_that = "I can quickly generate multiple columns."
   ),
-  background(
+    background(
     title = "Input dataframe with text data",
     given = "a dataframe [data] with text columns",
     and = list(
-               "a column prefix [cols_]",
-               "a specified column [col]")),
+               "a column prefix [default]",
+               "a specified column [name]")),
 
   input = c("
            |value |name                      |
@@ -21,16 +21,16 @@ bundle(
            |3     |John, Jacob, Jingleheimer |
            ")), code = {
 
-it(
- bundle(
-  scenario(
+  it(
+  bundle(
+    scenario(
       title = "Split column with a default pattern",
-      given = "a dataframe [data] with a specified column [col]",
-      when = "I split the [col] column using the default [[^[:alnum:]]+]",
-      then = "Then the [col] column should be split into multiple columns",
+      given = "a dataframe [data] with a specified column [name]",
+      when = "I split the [name] column using the default [[^[:alnum:]]+]",
+      then = "the [name] column should be split into multiple columns",
       and = "the new columns should be named with the default prefix [cols_]"
   ),
-output = c("
+  output = c("
           |value |name                      |col_1 |col_2 |col_3        |
           |------|--------------------------|------|------|-------------|
           |1     |John                      |John  |NA    |NA           |
@@ -45,5 +45,4 @@ output = c("
   expect_equal(object = observed, expected = output)
 
 })
-
 })

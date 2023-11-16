@@ -325,7 +325,9 @@ test_that(
 )
 ```
 
-It clearer to use nested `describe()` and `it()` calls, because they can hold combinations of features, scenarios, or backgrounds. Below is an example feature(), `background()`, and `scenario()` for `split_cols()`
+It clearer to use nested `describe()` and `it()` calls, because they can hold combinations of features, scenarios, or backgrounds. 
+
+Below is an example `feature()`, `background()`, and `scenario()` for `split_cols()`
 
 ```{r}
 describe(
@@ -349,7 +351,7 @@ describe(
         title = "Split column with a default pattern",
         given = "a dataframe [data] with a specified column [col]",
         when = "I split the [col] column using the default [[^[:alnum:]]+]",
-        then = "Then the [col] column should be split into multiple columns"
+        then = "the [col] column should be split into multiple columns"
       ), code = {
       
       expect_true(TRUE)
@@ -421,18 +423,29 @@ describe(
                "a specified column [col]"))
 ), code = {
     it(
-    # test scenario
+    # test scenario 1
      scenario(
         title = "Split column with a default pattern",
         given = "a dataframe [data] with a specified column [col]",
         when = "I split the [col] column using the default [[^[:alnum:]]+]",
-        then = "Then the [col] column should be split into multiple columns"
+        then = "the [col] column should be split into multiple columns"
       ), code = {
       
       expect_true(TRUE)
       
     })
-  
+    it(
+    # test scenario 2
+     scenario(
+        title = "Split column with a default pattern",
+        given = "a dataframe [data] with a specified column [col]",
+        when = "I split the [col] column using the default [[^[:alnum:]]+]",
+        then = "the new columns should be named with the default prefix [cols_]"
+      ), code = {
+      
+      expect_true(TRUE)
+      
+    })
   })
 ```
 
@@ -476,8 +489,8 @@ bundle(
     title = "Input dataframe with text data", 
     given = "a dataframe [data] with text columns", 
     and = list(
-               "a column prefix [cols_]", 
-               "a specified column [col]")),
+               "a column prefix [name]", 
+               "a specified column [name]")),
   
   input = c("
            |value |name                      |
@@ -503,8 +516,8 @@ bundle(
     title = "Input dataframe with text data", 
     given = "a dataframe [data] with text columns", 
     and = list(
-               "a column prefix [cols_]", 
-               "a specified column [col]")),
+               "a column prefix [default]", 
+               "a specified column [name]")),
   
   input = c("
            |value |name                      |
@@ -542,9 +555,9 @@ with_table(output)
 bundle(
 scenario(
     title = "Split column with a default pattern",
-    given = "a dataframe [data] with a specified column [col]",
-    when = "I split the [col] column using the default [[^[:alnum:]]+]",
-    then = "Then the [col] column should be split into multiple columns",
+    given = "a dataframe [data] with a specified column [name]",
+    when = "I split the [name] column using the default [[^[:alnum:]]+]",
+    then = "Then the [name] column should be split into multiple columns",
     and = "the new columns should be named with the default prefix [cols_]"
   ),
 output = c("
@@ -571,8 +584,8 @@ bundle(
     title = "Input dataframe with text data", 
     given = "a dataframe [data] with text columns", 
     and = list(
-               "a column prefix [cols_]", 
-               "a specified column [col]")),
+               "a column prefix [default]", 
+               "a specified column [name]")),
   
   input = c("
            |value |name                      |
@@ -583,9 +596,9 @@ bundle(
            "),
   scenario(
       title = "Split column with a default pattern",
-      given = "a dataframe [data] with a specified column [col]",
-      when = "I split the [col] column using the default [[^[:alnum:]]+]",
-      then = "Then the [col] column should be split into multiple columns",
+      given = "a dataframe [data] with a specified column [name]",
+      when = "I split the [name] column using the default [[^[:alnum:]]+]",
+      then = "the [name] column should be split into multiple columns",
       and = "the new columns should be named with the default prefix [cols_]"
   ),
 output = c("
@@ -613,8 +626,8 @@ bundle(
     title = "Input dataframe with text data", 
     given = "a dataframe [data] with text columns", 
     and = list(
-               "a column prefix [cols_]", 
-               "a specified column [col]")),
+               "a column prefix [default]", 
+               "a specified column [name]")),
   
   input = c("
            |value |name                      |
@@ -628,9 +641,9 @@ it(
  bundle(
   scenario(
       title = "Split column with a default pattern",
-      given = "a dataframe [data] with a specified column [col]",
-      when = "I split the [col] column using the default [[^[:alnum:]]+]",
-      then = "Then the [col] column should be split into multiple columns",
+      given = "a dataframe [data] with a specified column [name]",
+      when = "I split the [name] column using the default [[^[:alnum:]]+]",
+      then = "the [name] column should be split into multiple columns",
       and = "the new columns should be named with the default prefix [cols_]"
   ),
 output = c("
