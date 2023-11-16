@@ -40,13 +40,17 @@ library(testthat)
 
 `bddR` was motivated by the latest recommendation from the `testthat` authors on moving the test scope to *within* the test (i.e., remove or reduce the need for code outside the call to `test_that()`).
 
+<br>
+
 > ***To avoid code outside of `test_that()`:***
 > 
 > - ***Move file-scope logic to either narrower scope (just this test) or a broader scope (all files)***
 > 
 > - ***It's ok to copy and paste: test code doesn't have to be super dry. Obvious >> DRY***  - [Package Development Masterclass, posit::conf(2023)](https://github.com/posit-conf-2023/pkg-dev-masterclass/blob/main/materials/3-advanced-testing.pdf)
 
-Adopting test [fixtures, helpers, and setup](https://www.tidyverse.org/blog/2020/04/self-cleaning-test-fixtures/) files will address the first item in the list above, but `bddR` is mostly focused on the second item: making test obvious and clear. 
+<br>
+
+Adopting test [fixtures, helpers, and setup](https://www.tidyverse.org/blog/2020/04/self-cleaning-test-fixtures/) files will address the first item in the list above, but `bddR` is mostly focused on the second item: making tests obvious and clear. 
 
 ## Behavior-driven development functions
 
@@ -76,7 +80,11 @@ Each `it()` call is essentially identical to `test_that()`, but allows for a lon
 
 ## What to test 
 
+<br>
+
 > ***Strive to test each behaviour in one and only one test. Then if that behaviour later changes you only need to update a single test*** - [What to test, R Packages, 2ed](https://r-pkgs.org/testing-design.html#what-to-test)
+
+<br>
 
 `bddR` attempts to address the advice above by providing a set of [Gherkin-style syntax](https://cucumber.io/docs/gherkin/reference/) functions that can be placed in the `description` argument of `decribe()` or `it()`. The three primary functions in `bddR` are `feature()`, `scenario()`, and `background()`.
 
@@ -186,7 +194,11 @@ feature(
 
 Scenarios are at the heart of BDD because they illustrate concrete examples of how the code in our package should behave. Scenarios are also great for communicating and documenting requirements, code, and tests in succinct, plain language:
 
+<br>
+
 > ***"Examples play a primary role in BDD, simply because they're an extremely effective way of communicating clear, precise, and unambiguous requirements. Specifications written in natural language are, as it turns out, a terribly poor way of communicating requirements, because there's so much space for ambiguity, assumptions, and misunderstandings. Examples are a great way to overcome these limitations and clarify the requirements. Examples are also a great way to explore and expand your knowledge."*** - [BDD in Action, John Ferguson Smart](https://www.manning.com/books/bdd-in-action)
+
+<br>
 
 Consider the scenario below for `split_cols()`:
 
