@@ -142,11 +142,14 @@ Then if that behaviour later changes you only need to update a single
 test</em></strong> - <a href="https://r-pkgs.org/testing-design.html#what-to-test" class="external-link">What to test,
 R Packages, 2ed</a></p>
 </blockquote>
-<p><code>bddR</code> address the advice above by providing a set of <a href="https://cucumber.io/docs/gherkin/reference/" class="external-link">Gherkin-style
-syntax</a> functions that can be palced in the <code>description</code>
-argument of <code>decribe()</code> or <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code>. The following
-sections walk through an example with the <code><a href="../reference/split_cols.html">split_cols()</a></code>
-function:</p>
+<p><code>bddR</code> attempts to address the advice above by providing a
+set of <a href="https://cucumber.io/docs/gherkin/reference/" class="external-link">Gherkin-style
+syntax</a> functions that can be placed in the <code>description</code>
+argument of <code>decribe()</code> or <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code>. The three
+primary functions in <code>bddR</code> are <code><a href="../reference/feature.html">feature()</a></code>,
+<code><a href="../reference/scenario.html">scenario()</a></code>, and <code><a href="../reference/background.html">background()</a></code>.</p>
+<p>The following sections walk through an example with the
+<code><a href="../reference/split_cols.html">split_cols()</a></code> function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">split_cols</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">col</span>, <span class="va">pattern</span> <span class="op">=</span> <span class="st">"[^[:alnum:]]+"</span>, <span class="va">col_prefix</span> <span class="op">=</span> <span class="st">"col"</span><span class="op">)</span><span class="op">{</span></span>
 <span></span>
@@ -174,9 +177,6 @@ function:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">in_data</span>, <span class="va">out_cols_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>The three primary functions in <code>bddR</code> are
-<code><a href="../reference/feature.html">feature()</a></code>, <code><a href="../reference/scenario.html">scenario()</a></code>, and
-<code><a href="../reference/background.html">background()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -202,6 +202,8 @@ it would look something like this:</p>
   As a user of split_cols()
   I want to specify a column and a pattern 
   So that I can quickly generate multiple columns.</code></pre>
+<p>The goal of a feature is to clearly capture the behavior or outcome
+we are trying to achieve.</p>
 <p>The arguments in the <code><a href="../reference/feature.html">feature()</a></code> function match the
 Gherkin feature keywords:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -230,9 +232,6 @@ syntax is rendered when the file is knitted:</p>
     As a user of split_cols()
     I want to specify a column and a pattern
     So that I can quickly generate multiple columns.</code></pre>
-<p>The point of a feature is to accurately capture what we are trying to
-achieve with a function (or set of functions, application, package,
-etc.)</p>
 </div>
 <div class="section level2">
 <h2 id="scenarios">Scenarios<a class="anchor" aria-label="anchor" href="#scenarios"></a>
@@ -254,23 +253,24 @@ Ferguson Smart</a></p>
 </blockquote>
 <p>Consider the scenario below for <code><a href="../reference/split_cols.html">split_cols()</a></code>:</p>
 <pre class="gherkin"><code>  Scenario: Split column with a default pattern
-    Given a dataframe with a specified column "&lt;column_name&gt;"
-    When I split the "&lt;column_name&gt;" column using the default pattern
-    Then the "&lt;column_name&gt;" column should be split into multiple columns</code></pre>
-<p>Below is the same scenario in the <code><a href="../reference/scenario.html">scenario()</a></code>
-function:</p>
+    Givena a dataframe with a specified column 
+    When I split the column using the default pattern
+    Then the column should be split into multiple columns</code></pre>
+<p>If we were to re-write this using the <code><a href="../reference/scenario.html">scenario()</a></code>
+function, it might look like so:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/scenario.html">scenario</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Split column with a default pattern"</span>,</span>
 <span>    given <span class="op">=</span> <span class="st">"a dataframe [data] with a specified column [col]"</span>,</span>
 <span>    when <span class="op">=</span> <span class="st">"I split the [col] column using the default [[^[:alnum:]]+]"</span>,</span>
-<span>    then <span class="op">=</span> <span class="st">"Then the [col] column should be split into multiple columns"</span></span>
+<span>    then <span class="op">=</span> <span class="st">"the [col] column should be split into multiple columns"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p>When rendered, scenarios look like so:</p>
+<p>Note that I’ve added the function arguments in square brackets (this
+is optional). When rendered, scenarios look like so:</p>
 <pre><code>  Scenario: Split column with a default pattern
     Given a dataframe [data] with a specified column [col]
     When I split the [col] column using the default [[^[:alnum:]]+]
-    Then Then the [col] column should be split into multiple columns</code></pre>
+    Then the [col] column should be split into multiple columns</code></pre>
 <div class="section level3">
 <h3 id="and">And<a class="anchor" aria-label="anchor" href="#and"></a>
 </h3>
@@ -281,13 +281,12 @@ after the <code>then</code> keyword to test multiple behaviors:</p>
 <span>    title <span class="op">=</span> <span class="st">"Split column with a default pattern"</span>,</span>
 <span>    given <span class="op">=</span> <span class="st">"a dataframe [data] with a specified column [col]"</span>,</span>
 <span>    when <span class="op">=</span> <span class="st">"I split the [col] column using the default [[^[:alnum:]]+]"</span>,</span>
-<span>    then <span class="op">=</span> <span class="st">"Then the [col] column should be split into multiple columns"</span>,</span>
+<span>    then <span class="op">=</span> <span class="st">"the [col] column should be split into multiple columns"</span>,</span>
 <span>    and <span class="op">=</span> <span class="st">"the new columns should be named with the default prefix [cols_]"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>In Gherkin you’ll occasionally see <code>And</code> keywords
 following the <code>Given</code> statement, but in <code>bddR</code>
-these are intended to be placed in the <code><a href="../reference/background.html">background()</a></code>
-function:</p>
+these are intended to be placed in the <code><a href="../reference/background.html">background()</a></code>:</p>
 </div>
 </div>
 <div class="section level2">
@@ -319,7 +318,7 @@ lines:</p>
 And a specified column "&lt;column_name&gt;"
 And a column prefix "&lt;col_prefix&gt;"</code></pre>
 <p>These <code>And</code> statements can be placed in the
-<code><a href="../reference/background.html">background()</a></code> to removes repetition:</p>
+<code><a href="../reference/background.html">background()</a></code> to remove repetition:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/background.html">background</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Input dataframe with text data"</span>, </span>
@@ -327,8 +326,8 @@ And a column prefix "&lt;col_prefix&gt;"</code></pre>
 <span>    and <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>               <span class="st">"a column prefix [cols_]"</span>, </span>
 <span>               <span class="st">"a specified column [col]"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The nice thing about storing context in a <code><a href="../reference/background.html">background()</a></code>
-means that any updates will only have to change in a single
+<p>The nice thing about storing context in <code><a href="../reference/background.html">background()</a></code> is
+that you’ll only have to update your test context in a single
 location.</p>
 <p>When rendered, the <code><a href="../reference/background.html">background()</a></code> looks like this:</p>
 <pre><code>  Background: Input dataframe with text data
@@ -336,11 +335,11 @@ location.</p>
     And a column prefix [cols_]
     And a specified column [col]
         </code></pre>
-<p>BDD tests should communicates the context and intended behaviors of a
-function, and provides a series of worked examples for how the code
-should be used. Writing BDD tests takes longer, but makes it easier for
-stakeholders and other developers to understand how the code in your
-package should be used (and tested).</p>
+<p>BDD tests should communicate the context and intended behaviors, and
+provide a series of worked examples for how the code should be used. BDD
+tests take longer to write, but they makes it easier for stakeholders
+and collaborators to understand how the code in your package should be
+used (and tested).</p>
 </div>
 <div class="section level2">
 <h2 id="tests">Tests<a class="anchor" aria-label="anchor" href="#tests"></a>
@@ -402,8 +401,8 @@ scenarios, or backgrounds. Below is an example feature(),
 <h2 id="bundling">Bundling<a class="anchor" aria-label="anchor" href="#bundling"></a>
 </h2>
 <p>Ideally, <code>bddR</code>’s functions are developed independently
-and then wrapped in a <code><a href="../reference/bundle.html">bundle()</a></code> before passing to
-<code>testthat</code>’s BDD functions:</p>
+and then wrapped in a <code><a href="../reference/bundle.html">bundle()</a></code> before passing to the
+<code>testthat</code> BDD functions:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/bundle.html">bundle</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/feature.html">feature</a></span><span class="op">(</span></span>
@@ -419,7 +418,7 @@ and then wrapped in a <code><a href="../reference/bundle.html">bundle()</a></cod
 <span>               <span class="st">"a column prefix [cols_]"</span>, </span>
 <span>               <span class="st">"a specified column [col]"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>This makes it easier to combine features and backgrounds into a
+<p>Bundling makes it easier to combine features and backgrounds into a
 single call:</p>
 <pre><code>  Feature: Split a single column into multiple columns using a pattern
     As a user of split_cols()
@@ -430,9 +429,9 @@ single call:</p>
     And a column prefix [cols_]
     And a specified column [col]
         </code></pre>
-<p>This allows us to pass a feature and background <code><a href="../reference/bundle.html">bundle()</a></code>
-to <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> and test separate
-<code><a href="../reference/scenario.html">scenario()</a></code>s:</p>
+<p><code><a href="../reference/bundle.html">bundle()</a></code> also allows us to pass a <code><a href="../reference/feature.html">feature()</a></code>
+and <code><a href="../reference/background.html">background()</a></code> to <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code>, then test a
+particular <code><a href="../reference/scenario.html">scenario()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># bundle feature and background</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bundle</span>(</span>
@@ -471,17 +470,17 @@ to <code><a href="https://testthat.r-lib.org/reference/describe.html" class="ext
 <p>It’s also possible to provide a table in a scenario or feature. Let’s
 assume we have a small example of data that illustrates an example
 behavior for our <code><a href="../reference/split_cols.html">split_cols()</a></code> function (stored in
-<code>input_data</code>):</p>
+<code>input</code>):</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">input_data</span></span>
+<code class="sourceCode R"><span><span class="va">input</span></span>
 <span><span class="co">#&gt;   value                      name</span></span>
 <span><span class="co">#&gt; 1     1                      John</span></span>
 <span><span class="co">#&gt; 2     2               John, Jacob</span></span>
 <span><span class="co">#&gt; 3     3 John, Jacob, Jingleheimer</span></span></code></pre></div>
-<p>We can convert <code>input_data</code> to a Gherkin-style table using
+<p>We can convert <code>input</code> to a Gherkin-style table using
 <code><a href="../reference/with_table.html">with_table()</a></code>:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/with_table.html">with_table</a></span><span class="op">(</span><span class="va">input_data</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/with_table.html">with_table</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span></span>
 <span><span class="co">#&gt; |value |name                      |</span></span>
 <span><span class="co">#&gt; |------|--------------------------|</span></span>
 <span><span class="co">#&gt; |1     |John                      |</span></span>
@@ -506,13 +505,13 @@ include in a <code><a href="../reference/bundle.html">bundle()</a></code> with t
 <span>               <span class="st">"a column prefix [cols_]"</span>, </span>
 <span>               <span class="st">"a specified column [col]"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  </span>
-<span>  input_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"</span></span>
-<span><span class="st">                 |value |name                      |</span></span>
-<span><span class="st">                 |------|--------------------------|</span></span>
-<span><span class="st">                 |1     |John                      |</span></span>
-<span><span class="st">                 |2     |John, Jacob               |</span></span>
-<span><span class="st">                 |3     |John, Jacob, Jingleheimer |</span></span>
-<span><span class="st">                 "</span><span class="op">)</span></span>
+<span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"</span></span>
+<span><span class="st">           |value |name                      |</span></span>
+<span><span class="st">           |------|--------------------------|</span></span>
+<span><span class="st">           |1     |John                      |</span></span>
+<span><span class="st">           |2     |John, Jacob               |</span></span>
+<span><span class="st">           |3     |John, Jacob, Jingleheimer |</span></span>
+<span><span class="st">           "</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>This makes it easier to view them in RMarkdown or Quarto files (with
 <code>echo</code> set to <code>FALSE</code>)</p>
@@ -526,22 +525,22 @@ include in a <code><a href="../reference/bundle.html">bundle()</a></code> with t
     And a specified column [col]
         
   
-                   |value |name                      |
-                   |------|--------------------------|
-                   |1     |John                      |
-                   |2     |John, Jacob               |
-                   |3     |John, Jacob, Jingleheimer |
+             |value |name                      |
+             |------|--------------------------|
+             |1     |John                      |
+             |2     |John, Jacob               |
+             |3     |John, Jacob, Jingleheimer |
   </code></pre>
 <p>If we know we know what we the output table should look like, we can
 include it with the <code>scenario</code>:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">output_data</span></span>
+<code class="sourceCode R"><span><span class="va">output</span></span>
 <span><span class="co">#&gt;   value                      name col_1 col_2        col_3</span></span>
 <span><span class="co">#&gt; 1     1                      John  John  &lt;NA&gt;         &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 2     2               John, Jacob  John Jacob         &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 3     3 John, Jacob, Jingleheimer  John Jacob Jingleheimer</span></span></code></pre></div>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/with_table.html">with_table</a></span><span class="op">(</span><span class="va">output_data</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/with_table.html">with_table</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>
 <pre><code>  |value |name                      |col_1 |col_2 |col_3        |
   |------|--------------------------|------|------|-------------|
   |1     |John                      |John  |NA    |NA           |
@@ -556,18 +555,18 @@ include it with the <code>scenario</code>:</p>
 <span>    then <span class="op">=</span> <span class="st">"Then the [col] column should be split into multiple columns"</span>,</span>
 <span>    and <span class="op">=</span> <span class="st">"the new columns should be named with the default prefix [cols_]"</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>output_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"</span></span>
-<span><span class="st">                |value |name                      |col_1 |col_2 |col_3        |</span></span>
-<span><span class="st">                |------|--------------------------|------|------|-------------|</span></span>
-<span><span class="st">                |1     |John                      |John  |NA    |NA           |</span></span>
-<span><span class="st">                |2     |John, Jacob               |John  |Jacob |NA           |</span></span>
-<span><span class="st">                |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |</span></span>
-<span><span class="st">              "</span><span class="op">)</span></span>
+<span>output <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"</span></span>
+<span><span class="st">          |value |name                      |col_1 |col_2 |col_3        |</span></span>
+<span><span class="st">          |------|--------------------------|------|------|-------------|</span></span>
+<span><span class="st">          |1     |John                      |John  |NA    |NA           |</span></span>
+<span><span class="st">          |2     |John, Jacob               |John  |Jacob |NA           |</span></span>
+<span><span class="st">          |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |</span></span>
+<span><span class="st">        "</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Now our <code>background</code>, <code>feature</code>,
 <code>scenario</code> (and tables) are in the Gherkin-style format that
-can be placed in R Markdown and nicely rendered for stakeholders or
-non-technical audiences:</p>
+can be placed in a R Markdown file and nicely rendered for stakeholders
+or non-technical audiences:</p>
 <pre><code>  Feature: Split a single column into multiple columns using a pattern
     As a user of split_cols()
     I want to specify a column and a pattern
@@ -578,12 +577,12 @@ non-technical audiences:</p>
     And a specified column [col]
         
   
-                   |value |name                      |
-                   |------|--------------------------|
-                   |1     |John                      |
-                   |2     |John, Jacob               |
-                   |3     |John, Jacob, Jingleheimer |
-                   
+             |value |name                      |
+             |------|--------------------------|
+             |1     |John                      |
+             |2     |John, Jacob               |
+             |3     |John, Jacob, Jingleheimer |
+             
   Scenario: Split column with a default pattern
     Given a dataframe [data] with a specified column [col]
     When I split the [col] column using the default [[^[:alnum:]]+]
@@ -613,13 +612,13 @@ documented:</p>
 <span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>               <span class="st">"a column prefix [cols_]"</span>, </span>
 <span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">"a specified column [col]"</span>)),</span>
 <span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">input_data =</span> <span class="fu">c</span>(<span class="st">"</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="st">                 |value |name                      |</span></span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="st">                 |------|--------------------------|</span></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="st">                 |1     |John                      |</span></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="st">                 |2     |John, Jacob               |</span></span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="st">                 |3     |John, Jacob, Jingleheimer |</span></span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="st">                 "</span>)), <span class="at">code =</span> {</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">input =</span> <span class="fu">c</span>(<span class="st">"</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="st">           |value |name                      |</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="st">           |------|--------------------------|</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="st">           |1     |John                      |</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="st">           |2     |John, Jacob               |</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="st">           |3     |John, Jacob, Jingleheimer |</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="st">           "</span>)), <span class="at">code =</span> {</span>
 <span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="fu">it</span>(</span>
 <span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a> <span class="fu">bundle</span>(</span>
@@ -630,19 +629,19 @@ documented:</p>
 <span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">then =</span> <span class="st">"Then the [col] column should be split into multiple columns"</span>,</span>
 <span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">and =</span> <span class="st">"the new columns should be named with the default prefix [cols_]"</span></span>
 <span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="at">output_data =</span> <span class="fu">c</span>(<span class="st">"</span></span>
-<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="st">                |value |name                      |col_1 |col_2 |col_3        |</span></span>
-<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a><span class="st">                |------|--------------------------|------|------|-------------|</span></span>
-<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a><span class="st">                |1     |John                      |John  |NA    |NA           |</span></span>
-<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a><span class="st">                |2     |John, Jacob               |John  |Jacob |NA           |</span></span>
-<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a><span class="st">                |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |</span></span>
-<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a><span class="st">              "</span>)</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="at">output =</span> <span class="fu">c</span>(<span class="st">"</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="st">          |value |name                      |col_1 |col_2 |col_3        |</span></span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a><span class="st">          |------|--------------------------|------|------|-------------|</span></span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a><span class="st">          |1     |John                      |John  |NA    |NA           |</span></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a><span class="st">          |2     |John, Jacob               |John  |Jacob |NA           |</span></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a><span class="st">          |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |</span></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a><span class="st">        "</span>)</span>
 <span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">code =</span> {</span>
 <span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create observed output</span></span>
-<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>  observed <span class="ot">&lt;-</span> <span class="fu">split_cols</span>(<span class="at">data =</span> input_data, <span class="at">col =</span> <span class="st">'name'</span>)</span>
-<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compare against output_data</span></span>
-<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="at">object =</span> observed, <span class="at">expected =</span> output_data)</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>  observed <span class="ot">&lt;-</span> <span class="fu">split_cols</span>(<span class="at">data =</span> input, <span class="at">col =</span> <span class="st">'name'</span>)</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compare against output</span></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="at">object =</span> observed, <span class="at">expected =</span> output)</span>
 <span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a></span>
