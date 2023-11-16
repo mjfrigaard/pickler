@@ -4,10 +4,10 @@
     <loc>https://mjfrigaard.github.io/bddR/404.html</loc>
   </url>
   <url>
-    <loc>https://mjfrigaard.github.io/bddR/articles/bdd-testthat.html</loc>
+    <loc>https://mjfrigaard.github.io/bddR/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://mjfrigaard.github.io/bddR/articles/index.html</loc>
+    <loc>https://mjfrigaard.github.io/bddR/articles/start.html</loc>
   </url>
   <url>
     <loc>https://mjfrigaard.github.io/bddR/authors.html</loc>
@@ -43,7 +43,7 @@
     <loc>https://mjfrigaard.github.io/bddR/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://mjfrigaard.github.io/bddR/reference/pivot_term_long.html</loc>
+    <loc>https://mjfrigaard.github.io/bddR/reference/pivot_string_long.html</loc>
   </url>
   <url>
     <loc>https://mjfrigaard.github.io/bddR/reference/process_text.html</loc>
@@ -58,7 +58,7 @@
     <loc>https://mjfrigaard.github.io/bddR/reference/scenario_build.html</loc>
   </url>
   <url>
-    <loc>https://mjfrigaard.github.io/bddR/reference/sep_cols_mult.html</loc>
+    <loc>https://mjfrigaard.github.io/bddR/reference/split_cols.html</loc>
   </url>
   <url>
     <loc>https://mjfrigaard.github.io/bddR/reference/with_table.html</loc>
