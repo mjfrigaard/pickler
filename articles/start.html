@@ -91,6 +91,7 @@ installed.</p>
 <code>testthat</code> authors on moving the test scope to
 <em>within</em> the test (i.e., remove or reduce the need for code
 outside the call to <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code>).</p>
+<p><br></p>
 <blockquote>
 <p><strong><em>To avoid code outside of
 <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code>:</em></strong></p>
@@ -102,10 +103,11 @@ be super dry. Obvious &gt;&gt; DRY</em></strong> - <a href="https://github.com/p
 Development Masterclass, posit::conf(2023)</a></p></li>
 </ul>
 </blockquote>
+<p><br></p>
 <p>Adopting test <a href="https://www.tidyverse.org/blog/2020/04/self-cleaning-test-fixtures/" class="external-link">fixtures,
 helpers, and setup</a> files will address the first item in the list
 above, but <code>bddR</code> is mostly focused on the second item:
-making test obvious and clear.</p>
+making tests obvious and clear.</p>
 </div>
 <div class="section level2">
 <h2 id="behavior-driven-development-functions">Behavior-driven development functions<a class="anchor" aria-label="anchor" href="#behavior-driven-development-functions"></a>
@@ -136,12 +138,14 @@ are excellent additions to the suite of testing tools provided by
 <div class="section level2">
 <h2 id="what-to-test">What to test<a class="anchor" aria-label="anchor" href="#what-to-test"></a>
 </h2>
+<p><br></p>
 <blockquote>
 <p><strong><em>Strive to test each behaviour in one and only one test.
 Then if that behaviour later changes you only need to update a single
 test</em></strong> - <a href="https://r-pkgs.org/testing-design.html#what-to-test" class="external-link">What to test,
 R Packages, 2ed</a></p>
 </blockquote>
+<p><br></p>
 <p><code>bddR</code> attempts to address the advice above by providing a
 set of <a href="https://cucumber.io/docs/gherkin/reference/" class="external-link">Gherkin-style
 syntax</a> functions that can be placed in the <code>description</code>
@@ -240,6 +244,7 @@ syntax is rendered when the file is knitted:</p>
 examples of how the code in our package should behave. Scenarios are
 also great for communicating and documenting requirements, code, and
 tests in succinct, plain language:</p>
+<p><br></p>
 <blockquote>
 <p><strong><em>“Examples play a primary role in BDD, simply because
 they’re an extremely effective way of communicating clear, precise, and
@@ -251,6 +256,7 @@ limitations and clarify the requirements. Examples are also a great way
 to explore and expand your knowledge.”</em></strong> - <a href="https://www.manning.com/books/bdd-in-action" class="external-link">BDD in Action, John
 Ferguson Smart</a></p>
 </blockquote>
+<p><br></p>
 <p>Consider the scenario below for <code><a href="../reference/split_cols.html">split_cols()</a></code>:</p>
 <pre class="gherkin"><code>  Scenario: Split column with a default pattern
     Givena a dataframe with a specified column 
