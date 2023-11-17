@@ -7,6 +7,8 @@
 scenario_build(title, given, when, then, and = NULL)
 }
 \arguments{
+\item{title}{Scenario title}
+
 \item{given}{Some initial context}
 
 \item{when}{An action occurs}

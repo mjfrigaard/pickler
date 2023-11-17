@@ -11,15 +11,21 @@ background(title, given, ...)
 
 \item{given}{Preconditions for scenario/feature.}
 
-\item{...}{additional \code{and} arguments for initial context (provided in \code{list()})}
+\item{...}{additional \code{and} arguments for initial context (provided in a
+\code{list()})}
 }
 \value{
-A BDD scenario
+A BDD background (based on \href{https://cucumber.io/docs/gherkin/}{Gherkin} syntax)
 }
 \description{
-BDD backgrounds are listed \strong{before} the first \code{scenario()}, at the same
-level of indentation.
+BDD backgrounds provide context and pre-existing conditions for features and
+scenarios.
 }
+\section{Technical details}{
+
+Use \code{background()} to reduce repetitive information in scenarios or features.
+}
+
 \examples{
 background(title = "Launching the application",
            given = "I have launched the application")
@@ -32,3 +38,9 @@ background(title = "Launching the application",
                       "the data contains variables like 'Critics Score' and 'MPAA'",
                       "the data contains variables like 'Audience Score' and 'Genre'"))
 }
+\seealso{
+Other {"BDD helpers"}: 
+\code{\link{feature}()},
+\code{\link{scenario}()}
+}
+\concept{{"BDD helpers"}}

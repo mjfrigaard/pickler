@@ -1,6 +1,6 @@
 #' BDD Feature (build)
 #'
-#' @param title Feature title
+#' @param title The feature title
 #' @param as_a "As a" <user/stakeholder>
 #' @param i_want "I want" <to perform some action>
 #' @param so_that "So that" <I can reach some business goal>
@@ -20,12 +20,23 @@ feature_build <- function(title, as_a, i_want, so_that) {
 
 #' BDD Feature
 #'
-#' @param title Feature title
-#' @param as_a "As a <user or stakeholder>"
-#' @param i_want "I want <to perform an action>"
-#' @param so_that "So that <I can reach business goal or deliver value>"
+#' Write a test feature.
+#'
+#' @param title The feature title
+#' @param as_a "As a" <user/stakeholder>
+#' @param i_want "I want" <to perform some action>
+#' @param so_that "So that" <I can reach some business goal>
+#'
+#' @section Technical details:
+#' The contents of feature are returned as a `'glue' chr`, but retain
+#' [Gherkin-style indentation](https://cucumber.io/docs/gherkin/reference/#feature).
+#' These can be passed to `testthat`'s [`it()`](https://testthat.r-lib.org/reference/describe.html) or [`test_that()`](https://testthat.r-lib.org/reference/test_that.html) testing functions.
+#'
+#' @seealso [scenario()]
 #'
 #' @return A feature (based on [Gherkin](https://cucumber.io/docs/gherkin/) syntax)
+#'
+#' @family {"BDD helpers"}
 #'
 #' @export feature
 #'

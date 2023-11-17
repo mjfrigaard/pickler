@@ -1,52 +1,3 @@
-#' Collapse transformer (utility function)
-#'
-#' A transformer which automatically collapses any glue block ending with `+`
-#'
-#' @section Source:
-#' This function comes from the [glue website](https://glue.tidyverse.org/articles/transformers.html)
-#'
-#'
-#' @param regex regular expression
-#' @param ... arguments passed to `glue_collapse()`
-#'
-#' @return transformed string
-#'
-#' @export
-#'
-#' @examples
-#' glue::glue("{1:5+}\n{letters[1:5]+}",
-#'            .transformer = collapse_transformer(sep = ", "))
-#' glue::glue("{1:5+}\n{letters[1:5]+}",
-#'            .transformer = collapse_transformer(sep = ", ", last = " and "))
-#' x <- c("one", "two")
-#' glue::glue("{x}: {1:5+}",
-#'            .transformer = collapse_transformer(sep = ", "))
-collapse_transformer <- function(regex = "[+]$", ...) {
-
-  function(text, envir) {
-
-    collapse <- grepl(regex, text)
-
-    if (collapse) {
-      text <- sub(regex, "", text)
-    }
-
-    res <- glue::identity_transformer(text, envir)
-
-    if (collapse) {
-
-      glue::glue_collapse(res, ...)
-
-    } else {
-
-      res
-
-    }
-
-  }
-
-}
-
 #' BDD background (build)
 #'
 #' BDD backgrounds are listed **before** the first `scenario()`, at the same
@@ -87,14 +38,21 @@ background_build <- function(title, given, and = NULL) {
 
 #' BDD background
 #'
-#' BDD backgrounds are listed **before** the first `scenario()`, at the same
-#' level of indentation.
+#' BDD backgrounds provide context and pre-existing conditions for features and
+#' scenarios.
 #'
 #' @param title Background title
 #' @param given Preconditions for scenario/feature.
-#' @param ... additional `and` arguments for initial context (provided in `list()`)
+#' @param ... additional `and` arguments for initial context (provided in a
+#' `list()`)
 #'
-#' @return A BDD scenario
+#' @section Technical details:
+#' Use `background()` to reduce repetitive information in scenarios or features.
+#'
+#'
+#' @return A BDD background (based on [Gherkin](https://cucumber.io/docs/gherkin/) syntax)
+#'
+#' @family {"BDD helpers"}
 #'
 #' @export background
 #'

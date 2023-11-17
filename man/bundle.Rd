@@ -7,14 +7,21 @@
 bundle(...)
 }
 \arguments{
-\item{...}{features, scenarios, background, etc.}
+\item{...}{features, scenarios, background, tables, etc.}
 }
 \value{
-bundled features, scenarios, background, etc. to be passed into tests.
+'bundled' features, scenarios, background, etc. to be passed into tests.
 }
 \description{
 Bundle BDD functions
 }
+\section{Technical details}{
+
+Items passed to \code{bundle()} are sorted and re-packaged in a list, them passed
+to \href{https://glue.tidyverse.org/reference/glue_collapse.html}{\code{glue::collapse()}}
+with \code{sep} set to \verb{\\n} (for newline).
+}
+
 \examples{
 bundle(
   feature(

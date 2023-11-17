@@ -18,7 +18,7 @@ scenario(title, given, when, then, and = NULL)
 \item{and}{additional 'and' arguments}
 }
 \value{
-A BDD scenario
+A scenario (based on \href{https://cucumber.io/docs/gherkin/}{Gherkin} syntax)
 }
 \description{
 Scenarios illustrate a concrete example of a specific behavior.
@@ -38,3 +38,11 @@ scenario(
     and = "the new columns should be named with the default prefix [cols]"
   )
 }
+\seealso{
+\code{\link[=feature]{feature()}}
+
+Other {"BDD helpers"}: 
+\code{\link{background}()},
+\code{\link{feature}()}
+}
+\concept{{"BDD helpers"}}

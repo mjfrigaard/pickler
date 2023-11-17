@@ -2,7 +2,6 @@
 
 export(background)
 export(bundle)
-export(collapse_transformer)
 export(feature)
 export(pivot_string_long)
 export(process_text)

@@ -7,23 +7,38 @@
 feature(title, as_a, i_want, so_that)
 }
 \arguments{
-\item{title}{Feature title}
+\item{title}{The feature title}
 
-\item{as_a}{"As a \if{html}{\out{<user or stakeholder>}}"}
+\item{as_a}{"As a" <user/stakeholder>}
 
-\item{i_want}{"I want \if{html}{\out{<to perform an action>}}"}
+\item{i_want}{"I want" \if{html}{\out{<to perform some action>}}}
 
-\item{so_that}{"So that \if{html}{\out{<I can reach business goal or deliver value>}}"}
+\item{so_that}{"So that" \if{html}{\out{<I can reach some business goal>}}}
 }
 \value{
 A feature (based on \href{https://cucumber.io/docs/gherkin/}{Gherkin} syntax)
 }
 \description{
-BDD Feature
+Write a test feature.
 }
+\section{Technical details}{
+
+The contents of feature are returned as a \verb{'glue' chr}, but retain
+\href{https://cucumber.io/docs/gherkin/reference/#feature}{Gherkin-style indentation}.
+These can be passed to \code{testthat}'s \href{https://testthat.r-lib.org/reference/describe.html}{\code{it()}} or \href{https://testthat.r-lib.org/reference/test_that.html}{\code{test_that()}} testing functions.
+}
+
 \examples{
 feature(title = "Visualization",
         as_a = "user",
         i_want = "to see the changes in the plot",
         so_that = "I can visualize the impact of my customizations")
 }
+\seealso{
+\code{\link[=scenario]{scenario()}}
+
+Other {"BDD helpers"}: 
+\code{\link{background}()},
+\code{\link{scenario}()}
+}
+\concept{{"BDD helpers"}}

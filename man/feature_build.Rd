@@ -7,7 +7,7 @@
 feature_build(title, as_a, i_want, so_that)
 }
 \arguments{
-\item{title}{Feature title}
+\item{title}{The feature title}
 
 \item{as_a}{"As a" <user/stakeholder>}
 

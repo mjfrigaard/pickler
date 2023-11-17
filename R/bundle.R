@@ -1,8 +1,13 @@
 #' Bundle BDD functions
 #'
-#' @param ... features, scenarios, background, etc.
+#' @param ... features, scenarios, background, tables, etc.
 #'
-#' @return bundled features, scenarios, background, etc. to be passed into tests.
+#' @return 'bundled' features, scenarios, background, etc. to be passed into tests.
+#'
+#' @section Technical details:
+#' Items passed to `bundle()` are sorted and re-packaged in a list, them passed
+#' to [`glue::collapse()`](https://glue.tidyverse.org/reference/glue_collapse.html)
+#' with `sep` set to `\n` (for newline).
 #'
 #' @export bundle
 #'
