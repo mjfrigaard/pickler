@@ -1,6 +1,6 @@
 #' Split column into multiple columns
 #'
-#' **This is a function for testing bddR.**
+#' **This is a function for testing pickler.**
 #'
 #' @param data a `data.frame` or `tibble`
 #' @param col column to split

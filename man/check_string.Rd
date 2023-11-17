@@ -16,7 +16,7 @@ invisible is passes, alert if fails
 Check for string (rlang util)
 }
 \examples{
-bddR:::check_string("test")
-bddR:::check_string(1)
+pickler:::check_string("test")
+pickler:::check_string(1)
 }
 \keyword{internal}

@@ -7,8 +7,8 @@
 #' @keywords internal
 #'
 #' @examples
-#' bddR:::check_string("test")
-#' bddR:::check_string(1)
+#' pickler:::check_string("test")
+#' pickler:::check_string(1)
 check_string <- function(x) {
   if (rlang::is_string(x)) {
     invisible()

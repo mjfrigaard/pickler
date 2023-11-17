@@ -15,7 +15,7 @@ pivot_string_long(string, sep = "[^[:alnum:]]+")
 data.frame with \code{unique_items} and \code{term}
 }
 \description{
-\strong{This is a function for testing bddR.}
+\strong{This is a function for testing pickler.}
 }
 \examples{
 pivot_string_long("A large size in stockings is hard to sell.")

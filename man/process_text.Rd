@@ -16,7 +16,7 @@ character}
 processed dataset
 }
 \description{
-\strong{This is a function for testing bddR.}
+\strong{This is a function for testing pickler.}
 }
 \examples{
 str(process_text(datasets::CO2))

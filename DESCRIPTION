@@ -1,6 +1,6 @@
-Package: bddR
+Package: pickler
 Type: Package
-Title: Write Gherkin features, scnearios, and background in tests.
+Title: Write Gherkin-style features, scnearios, and background in tests.
 Version: 0.1.0
 Author: Martin Frigaard <mjfrigaard@pm.me> [aut, cre]
 Maintainer: Martin Frigaard <mjfrigaard@pm.me>
@@ -20,4 +20,4 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://mjfrigaard.github.io/bddR/, https://github.com/mjfrigaard/bddR
+URL: https://mjfrigaard.github.io/pickler/, https://github.com/mjfrigaard/pickler

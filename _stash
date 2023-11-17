@@ -40,7 +40,7 @@ split_cols <- function(data, col, pattern = "[^[:alnum:]]+", col_prefix){
 
 ```Gherkin
 Feature: Separate single column into multiple based on pattern
-  As a user of split_cols()
+  As an analyst 
   # or 'As a user of the package containing split_cols()'
   I want to specify a separate column and a pattern to separate on
   So that a resulting dataframe contains the new separated columns.

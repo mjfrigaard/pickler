@@ -1,6 +1,6 @@
 #' Pivot a string into a data.frame (long)
 #'
-#' **This is a function for testing bddR.**
+#' **This is a function for testing pickler.**
 #'
 #' @param string a character vector.
 #' @param sep separator pattern (set to `"[^[:alnum:]]+"`)

@@ -13,24 +13,24 @@ knitr::opts_chunk$set(
 )
 ```
 
-# bddR
+# pickler <a href='https://mjfrigaard.github.io/pickler/'><img src='man/figures/logo.png' align="right" height="150" /></a>
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `bddR` is to provide [Gherkin syntax](https://cucumber.io/docs/gherkin/) helpers for [`testthat`'s `describe()` and `it()` functions](https://testthat.r-lib.org/reference/describe.html).
+The goal of `pickler` is to provide [Gherkin syntax](https://cucumber.io/docs/gherkin/) helpers for [`testthat`'s `describe()` and `it()` functions](https://testthat.r-lib.org/reference/describe.html).
 
 ## Installation
 
-You can install the development version of bddR from [GitHub](https://github.com/) with:
+You can install the development version of pickler from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("mjfrigaard/bddR")
+pak::pak("mjfrigaard/pickler")
 ```
 
 ```{r}
-library(bddR)
+library(pickler)
 ```
 
 
@@ -56,7 +56,7 @@ describe(description = "verify that you implement the right things", code = {
 })
 ```
 
-`bddR` provides a set of helpers for writing [Gherkin-style](https://cucumber.io/docs/gherkin/reference/) features, backgrounds and scenarios which can be placed in `describe()` and `it()`:  
+`pickler` provides a set of helpers for writing [Gherkin-style](https://cucumber.io/docs/gherkin/reference/) features, backgrounds and scenarios which can be placed in `describe()` and `it()`:  
 
 ```{r}
 describe(
@@ -78,7 +78,7 @@ describe(
 })
 ```
 
-`bddR` functions can also it can be dropped into the `desc` argument of `test_that()`:
+`pickler` functions can also it can be dropped into the `desc` argument of `test_that()`:
 
 ```{r}
 test_that(
@@ -94,4 +94,4 @@ test_that(
 )
 ```
 
-Check out the [Getting Started vignette](https://mjfrigaard.github.io/bddR/articles/start.html) to learn more.
+Check out the [Getting Started vignette](https://mjfrigaard.github.io/pickler/articles/start.html) to learn more.

@@ -13,7 +13,7 @@ rev_string(string)
 reversed string
 }
 \description{
-\strong{This is a function for testing bddR.}
+\strong{This is a function for testing pickler.}
 }
 \section{More info}{
 

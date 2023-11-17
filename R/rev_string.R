@@ -1,6 +1,6 @@
 #' Reverse strings (function for testing)
 #'
-#' **This is a function for testing bddR.**
+#' **This is a function for testing pickler.**
 #'
 #' @section More info:
 #'

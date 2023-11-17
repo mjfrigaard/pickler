@@ -13,15 +13,15 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = " ",
+  comment = "#>",
   error = TRUE
 )
 ```
 
-This vignette covers how to use `bddR` functions with [`testthat`'s `describe()` and `it()` functions](https://testthat.r-lib.org/reference/describe.html).
+This vignette covers how to use `pickler` functions with [`testthat`'s `describe()` and `it()` functions](https://testthat.r-lib.org/reference/describe.html).
 
 ```{r setup}
-library(bddR)
+library(pickler)
 ```
 
 Make sure you have the latest version of `testthat` installed.
@@ -38,7 +38,7 @@ library(testthat)
 
 ## Motivation
 
-`bddR` was motivated by the latest recommendation from the `testthat` authors on moving the test scope to *within* the test (i.e., remove or reduce the need for code outside the call to `test_that()`).
+`pickler` was motivated by the latest recommendation from the `testthat` authors on moving the test scope to *within* the test (i.e., remove or reduce the need for code outside the call to `test_that()`).
 
 <br>
 
@@ -50,7 +50,7 @@ library(testthat)
 
 <br>
 
-Adopting test [fixtures, helpers, and setup](https://www.tidyverse.org/blog/2020/04/self-cleaning-test-fixtures/) files will address the first item in the list above, but `bddR` is mostly focused on the second item: making tests obvious and clear. 
+Adopting test [fixtures, helpers, and setup](https://www.tidyverse.org/blog/2020/04/self-cleaning-test-fixtures/) files will address the first item in the list above, but `pickler` is mostly focused on the second item: making tests obvious and clear. 
 
 ## Behavior-driven development functions
 
@@ -86,54 +86,64 @@ Each `it()` call is essentially identical to `test_that()`, but allows for a lon
 
 <br>
 
-`bddR` attempts to address the advice above by providing a set of [Gherkin-style syntax](https://cucumber.io/docs/gherkin/reference/) functions that can be placed in the `description` argument of `decribe()` or `it()`. The three primary functions in `bddR` are `feature()`, `scenario()`, and `background()`.
+`pickler` attempts to address the advice above by providing a set of [Gherkin-style syntax](https://cucumber.io/docs/gherkin/reference/) functions that can be placed in the `description` argument of `decribe()` or `it()`. The three primary functions in `pickler` are `feature()`, `scenario()`, and `background()`.
 
 
-The following sections walk through an example with the `split_cols()` function: 
+The following sections walk through an example with the `split_cols()` function. You can view the source code for this function [here](https://github.com/mjfrigaard/pickler/blob/main/R/split_cols.R), but for now we'll just look it's arguments and the problem it solves: 
 
-```{r , eval=FALSE}
-split_cols <- function(data, col, pattern = "[^[:alnum:]]+", col_prefix = "col"){
-
-  stopifnot("data must be a data.frame or tibble" = is.data.frame(data))
-  stopifnot("'col' must be a character" = is.character(pattern))
-  stopifnot("'col' must be a column in 'data'" = col %in% names(data))
-  stopifnot("'pattern' must be a character" = is.character(pattern))
-  stopifnot("col_prefix must be a character" = is.character(col_prefix))
-
-  in_rgx <- pattern
-  in_data <- as.data.frame(data)
-  in_col <- as.character(col)
-
-  split_data <- strsplit(in_data[[in_col]], in_rgx)
-  max_length <- max(sapply(split_data, length))
-
-  padded_split_data <- lapply(split_data, function(x) {
-    c(x, rep(NA, max_length - length(x)))
-  })
-
-  out_cols <- do.call(rbind, padded_split_data)
-  colnames(out_cols) <- paste(col_prefix, seq_len(max_length), sep = "_")
-  out_cols_df <- as.data.frame(out_cols, stringsAsFactors = FALSE)
-
-  cbind(in_data, out_cols_df)
-
-}
+```{r eval=FALSE}
+split_cols(
+  data, 
+  col, 
+  pattern = "[^[:alnum:]]+", 
+  col_prefix = "col")
 ```
 
+Given the `input_data` data below: 
+
+```{r , echo=FALSE}
+input_data <- data.frame(id = c(1L, 2L, 3L),
+                         name = c("First", 
+                                  "First, Last",
+                                  "First, Middle, Last"))
+```
+
+```{r}
+input_data
+```
+
+`split_cols()` will generate this: 
+
+```{r, echo=FALSE}
+data.frame(id = 1:3,
+  name = c("First", "First, Last", "First, Middle, Last"),
+  col_1 = c("First", "First", "First"),
+  col_2 = c(NA, "Last", "Middle"),
+  col_3 = c(NA, NA, "Last"))
+```
+
+`split_cols()` was written because [`tidyr::separate()`](https://tidyr.tidyverse.org/reference/index.html#character-vectors) didn't have an easy solution, and I wanted to reduce the number of keystrokes/neurons/dependencies/etc to solve this problem. 
+
+```{r, eval=FALSE}
+tidyr::separate(data = input_data, 
+                     col = "name", 
+                     into = c("col_1", "col_2", "col_3"), 
+                     remove = FALSE,
+                     extra = "merge", 
+                     fill = "right")
+```
+
+```{verbatim}
+#>   id                name col_1  col_2 col_3
+#> 1  1               First First   <NA>  <NA>
+#> 2  2         First, Last First   Last  <NA>
+#> 3  3 First, Middle, Last First Middle  Last
+```
 
 
 ## Features 
 
-A feature is an independent unit or functionality in a system. All [Gherkin](https://cucumber.io/docs/gherkin/reference/) features have the following keywords: 
-
-```gherkin
-Feature: <title>
-  As a <person using the code>
-  I want <some action>
-  So that <desired behavior>
-```
-
-Using the language from `testthat`'s BDD functions above, a feature would be described like so:
+Features are the units of functionality we're trying to deliver. We can adapt the language from `testthat`'s BDD functions above into a [Gherkin-style](https://cucumber.io/docs/gherkin/reference/) feature:
 
 ```gherkin
 Feature: My function's feature
@@ -142,20 +152,25 @@ Feature: My function's feature
   So that I can ensure I did the thing right
 ```
 
-The `split_cols()` function was written because the [`tidyr::separate_*()`](https://tidyr.tidyverse.org/reference/index.html#character-vectors) functions didn't quite give me the solution I was looking for on a previous project.
+Features have the following keywords: 
 
-If I were to write the purpose of the `split_cols()` in [Gherkin syntax](https://cucumber.io/docs/gherkin/reference/), it would look something like this: 
+```gherkin
+Feature: <title>
+  As a <person using the code>
+  I want <some action>
+  So that <desired behavior>
+```
+
+A feature should start with a mental model of the problem we'd like to solve. The [Gherkin-style](https://cucumber.io/docs/gherkin/reference/) example for `split_cols()` might look something like this: 
 
 ```gherkin
 Feature: Split a single column into multiple columns using a pattern
-  As a user of split_cols()
+  As an analyst 
   I want to specify a column and a pattern 
   So that I can quickly generate multiple columns.
 ```
 
-The goal of a feature is to clearly capture the behavior or outcome we are trying to achieve. 
-
-The arguments in the `feature()` function match the Gherkin feature keywords:  
+The goal of a feature is to clearly state the objective or functionality we're trying to achieve. The arguments in `feature()` match the Gherkin feature keywords:  
 
 ```{r, eval=FALSE}
 feature(
@@ -166,9 +181,9 @@ feature(
   )
 ```
 
-This pattern is similar for all `bddR` functions  (except the keywords have been converted to `snake_case` to align with the [`tidyverse` naming conventions](https://style.tidyverse.org/syntax.html#object-names)).
+This pattern is similar for all `pickler` functions, but I've converted the keywords to `snake_case` so they align with the [`tidyverse` naming conventions](https://style.tidyverse.org/syntax.html#object-names)).
 
-The arguments also serve as prompts to fill out each keyword:
+`pickler`'s function arguments also serve as prompts to fill out each keyword: 
 
 ```{r eval=FALSE}
 feature(
@@ -179,9 +194,20 @@ feature(
   )
 ```
 
-In R Markdown, code blocks with `bddR` functions can set to `eval=TRUE` and `echo=FALSE` so the Gherkin syntax is rendered when the file is knitted: 
+You might be wondering why ypu'd bother passing this information into a function and not just include them in a language-agnostic fenced code block: 
 
-```{r eval=TRUE, echo=FALSE}
+````verbatim
+```
+Feature: Split a single column into multiple columns using a pattern
+  As an analyst 
+  I want to specify a column and a pattern 
+  So that I can quickly generate multiple columns.
+```
+````
+
+`picker`'s functions are designed to work in R Markdown *and* `testthat` tests. For example, any code blocks with a `pickler` functions can set to `eval=TRUE`, `echo=FALSE`, and `comment=""` to render nicely formatted Gherkin syntax when the file is knitted: 
+
+```{r eval=TRUE, echo=FALSE, comment=""}
 feature(
     title = "Split a single column into multiple columns using a pattern",
     as_a = "user of split_cols()",
@@ -192,7 +218,7 @@ feature(
 
 ## Scenarios
 
-Scenarios are at the heart of BDD because they illustrate concrete examples of how the code in our package should behave. Scenarios are also great for communicating and documenting requirements, code, and tests in succinct, plain language:
+Examples are the cornerstone of behavior-driven development and testing. Captured as *scenarios*, these should illustrate a concrete example of how our code should behave. Scenarios are also great for communicating and documenting requirements, code, and tests with stakeholders and non-technical audiences:
 
 <br>
 
@@ -200,16 +226,18 @@ Scenarios are at the heart of BDD because they illustrate concrete examples of h
 
 <br>
 
-Consider the scenario below for `split_cols()`:
+Consider the `scenario()` below for `split_cols()`:
 
-```gherkin
-  Scenario: Split column with a default pattern
-    Givena a dataframe with a specified column 
-    When I split the column using the default pattern
-    Then the column should be split into multiple columns
+```{r eval=FALSE}
+scenario(
+    title = "Split column with a default pattern",
+    given = "a dataframe with a specified column",
+    when = "I split the column using the default pattern",
+    then = "the column should be split into multiple columns"
+  )
 ```
 
-If we were to re-write this using the `scenario()` function, it might look like so:
+We could also add function arguments (in square brackets), but this is optional. 
 
 ```{r eval=FALSE}
 scenario(
@@ -220,9 +248,9 @@ scenario(
   )
 ```
 
-Note that I've added the function arguments in square brackets (this is optional). When rendered, scenarios look like so:
+When rendered, this scenario would look like so:
 
-```{r eval=TRUE, echo=FALSE}
+```{r eval=TRUE, echo=FALSE, comment=""}
 scenario(
     title = "Split column with a default pattern",
     given = "a dataframe [data] with a specified column [col]",
@@ -230,7 +258,6 @@ scenario(
     then = "the [col] column should be split into multiple columns"
   )
 ```
-
 
 ### And
 
@@ -246,11 +273,11 @@ scenario(
   )
 ```
 
-In Gherkin you'll occasionally see `And` keywords following the `Given` statement, but in `bddR` these are intended to be placed in the `background()`:
+Gherkin scenarios occasionally include `And` keywords directly following a `Given` statement, but in `pickler` this information is placed in the `background()`:
 
 ## Background 
 
-The `background()` function is used to provide context on any preexisting conditions (or state of the world) we're contending with. For example, consider the two Gherkin scenarios below: 
+`background()` can be used to provide context for any preexisting conditions (or the state of the world) we're contending with. `background()` can also be used to reduce any repetitive information in scenarios. For example, consider the two scenarios below: 
 
 ```gherkin
   Scenario: Split column with 'default' pattern
@@ -272,8 +299,7 @@ The `background()` function is used to provide context on any preexisting condit
     And the new columns should have names with the provided prefix and an index
 ```
 
-These scenarios have a lot of repetition--specifically, these lines: 
-
+These scenarios have a lot of duplicated lines--specifically, these three: 
 
 ```gherkin
 Given a dataframe with text data
@@ -281,7 +307,7 @@ And a specified column "<column_name>"
 And a column prefix "<col_prefix>"
 ```
 
-These `And` statements can be placed in the `background()` to remove repetition:
+We can place these in a `background()` to remove repetition and 'set the stage' for any future scenarios:
 
 ```{r eval=FALSE}
 background(
@@ -292,11 +318,11 @@ background(
                "a specified column [col]"))
 ```
 
-The nice thing about storing context in `background()` is that you'll only have to update your test context in a single location.
+The nice thing about storing additional context in `background()` is that you'll only have to update this information in a single location.
 
 When rendered, the `background()` looks like this:
 
-```{r eval=TRUE, echo=FALSE}
+```{r eval=TRUE, echo=FALSE, comment=""}
 background(
     title = "Input dataframe with text data", 
     given = "a dataframe [data] with text columns", 
@@ -305,29 +331,11 @@ background(
                "a specified column [col]"))
 ```
 
-BDD tests should communicate the context and intended behaviors, and provide a series of worked examples for how the code should be used. BDD tests take longer to write, but they makes it easier for stakeholders and collaborators to understand how the code in your package should be used (and tested).
-
 ## Tests
 
-`bddR` functions can be placed in desc argument of a the `test_that()` test, but sometimes a multiline descriptions [can cause errors](https://github.com/r-lib/testthat/issues/1900#issue-1995181567).: 
+BDD tests are written to communicate the context, intended behavior, and a series of use cases for how our code should be used. `pickler` functions help facilitate this because they can be placed in nested calls to `describe()` and `it()`. 
 
-```{r}
-test_that(
-  feature(
-    title = "My function's feature",
-    as_a = "user of this function",
-    i_want = "to verify that I implemented the right thing",
-    so_that = "to ensure I did the thing right"
-  ),
-  code = {
-    expect_true(TRUE)
-  }
-)
-```
-
-It clearer to use nested `describe()` and `it()` calls, because they can hold combinations of features, scenarios, or backgrounds. 
-
-Below is an example `feature()`, `background()`, and `scenario()` for `split_cols()`
+Below is an example `feature()`, `background()`, and `scenario()` for `split_cols()`:
 
 ```{r}
 describe(
@@ -363,9 +371,27 @@ describe(
 })
 ```
 
+BDD tests take longer to write, but the tradeoff is obvious: any losses in brevity are gained in clarity. The emphasis on using plain language makes it easier for stakeholders and collaborators to understand how our code works (and how it's being tested).
+
+`pickler` functions can also be placed in `desc` argument of a the `test_that()` test, but sometimes a multiline descriptions [can cause errors](https://github.com/r-lib/testthat/issues/1900#issue-1995181567).: 
+
+```{r}
+test_that(
+  feature(
+    title = "My function's feature",
+    as_a = "user of this function",
+    i_want = "to verify that I implemented the right thing",
+    so_that = "to ensure I did the thing right"
+  ),
+  code = {
+    expect_true(TRUE)
+  }
+)
+```
+
 ## Bundling 
 
-Ideally, `bddR`'s functions are developed independently and then wrapped in a `bundle()` before passing to the `testthat` BDD functions: 
+Ideally, `pickler`'s functions are developed independently and then wrapped in a `bundle()` before passing to the `testthat` BDD functions: 
 
 ```{r , eval=FALSE}
 bundle(
@@ -386,7 +412,7 @@ bundle(
 
 Bundling makes it easier to combine features and backgrounds into a single call:
 
-```{r , echo=FALSE, eval=TRUE}
+```{r , echo=FALSE, eval=TRUE, comment=""}
 bundle(
   feature(
     title = "Split a single column into multiple columns using a pattern",
@@ -403,7 +429,7 @@ bundle(
 )
 ```
 
-`bundle()` also allows us to pass a `feature()` and `background()` to `describe()`, then test a particular `scenario()`:
+`bundle()` also allows us to pass a `feature()` and `background()` to `describe()`, then test a particular `scenario()` with `it()`:
 
 ```{r}
 describe(
@@ -471,7 +497,11 @@ input
 
 We can convert `input` to a Gherkin-style table using `with_table()`:
 
-```{r comment="#>"}
+```{r eval=FALSE}
+with_table(input)
+```
+
+```{r echo=FALSE, eval=TRUE, comment=""}
 with_table(input)
 ```
 
@@ -502,9 +532,9 @@ bundle(
 )
 ```
 
-This makes it easier to view them in RMarkdown or Quarto files (with `echo` set to `FALSE`)
+This makes it easier to view them in RMarkdown or Quarto files (with `echo` set to `FALSE` and `comment` set to `""`)
 
-```{r , echo=FALSE}
+```{r , echo=FALSE, comment=""}
 bundle(
   feature(
     title = "Split a single column into multiple columns using a pattern",
@@ -529,7 +559,7 @@ bundle(
 )
 ```
 
-If we know we know what we the output table should look like, we can include it with the `scenario`: 
+If we know we know what we the `output` table should look like, we can include it with the `scenario`: 
 
 ```{r , echo = FALSE}
 output <- 
@@ -538,15 +568,11 @@ data.frame(value = 1:3, name = c("John", "John, Jacob", "John, Jacob, Jingleheim
 "Jacob"), col_3 = c(NA, NA, "Jingleheimer"))
 ```
 
-```{r, comment="#>"}
-output
-```
-
 ```{r , eval=FALSE, echo=TRUE}
 with_table(output)
 ```
 
-```{r , eval=TRUE, echo=FALSE}
+```{r , eval=TRUE, echo=FALSE, comment=""}
 with_table(output)
 ```
 
@@ -560,19 +586,20 @@ scenario(
     then = "Then the [name] column should be split into multiple columns",
     and = "the new columns should be named with the default prefix [cols_]"
   ),
-output = c("
+output = c(
+          "
           |value |name                      |col_1 |col_2 |col_3        |
           |------|--------------------------|------|------|-------------|
           |1     |John                      |John  |NA    |NA           |
           |2     |John, Jacob               |John  |Jacob |NA           |
           |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |
-        ")
+          ")
 )
 ```
 
 Now our `background`, `feature`, `scenario` (and tables) are in the Gherkin-style format that can be placed in a R Markdown file and nicely rendered for stakeholders or non-technical audiences: 
 
-```{r , echo=FALSE}
+```{r , eval=TRUE, echo=FALSE, comment=""}
 bundle(
   feature(
     title = "Split a single column into multiple columns using a pattern",
@@ -601,13 +628,14 @@ bundle(
       then = "the [name] column should be split into multiple columns",
       and = "the new columns should be named with the default prefix [cols_]"
   ),
-output = c("
-                |value |name                      |col_1 |col_2 |col_3        |
-                |------|--------------------------|------|------|-------------|
-                |1     |John                      |John  |NA    |NA           |
-                |2     |John, Jacob               |John  |Jacob |NA           |
-                |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |
-              ")
+output = c(
+          "
+          |value |name                      |col_1 |col_2 |col_3        |
+          |------|--------------------------|------|------|-------------|
+          |1     |John                      |John  |NA    |NA           |
+          |2     |John, Jacob               |John  |Jacob |NA           |
+          |3     |John, Jacob, Jingleheimer |John  |Jacob |Jingleheimer |
+          ")
 )
 ```
 
@@ -665,7 +693,7 @@ output = c("
 })
 ```
 
-And when it's placed in the [test file](https://github.com/mjfrigaard/bddR/blob/main/tests/testthat/test-split_cols.R), it passes!
+And when it's placed in the [test file](https://github.com/mjfrigaard/pickler/blob/main/tests/testthat/test-split_cols.R), it passes!
 
 ```{r , eval=FALSE}
 devtools:::test_active_file()

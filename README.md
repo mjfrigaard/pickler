@@ -1,28 +1,28 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bddR
+# pickler <a href='https://mjfrigaard.github.io/pickler/'><img src='man/figures/logo.png' align="right" height="150" /></a>
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `bddR` is to provide [Gherkin
+The goal of `pickler` is to provide [Gherkin
 syntax](https://cucumber.io/docs/gherkin/) helpers for [`testthat`’s
 `describe()` and `it()`
 functions](https://testthat.r-lib.org/reference/describe.html).
 
 ## Installation
 
-You can install the development version of bddR from
+You can install the development version of pickler from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("mjfrigaard/bddR")
+pak::pak("mjfrigaard/pickler")
 ```
 
 ``` r
-library(bddR)
+library(pickler)
 ```
 
 ``` r
@@ -37,7 +37,7 @@ pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
 #> ✔ Loading metadata database ... done
 #>  
 #> ℹ No downloads are needed
-#> ✔ 1 pkg + 32 deps: kept 33 [7.9s]
+#> ✔ 1 pkg + 32 deps: kept 33 [7.8s]
 library(testthat)
 ```
 
@@ -55,7 +55,7 @@ describe(description = "verify that you implement the right things", code = {
 #> Test passed
 ```
 
-`bddR` provides a set of helpers for writing
+`pickler` provides a set of helpers for writing
 [Gherkin-style](https://cucumber.io/docs/gherkin/reference/) features,
 backgrounds and scenarios which can be placed in `describe()` and
 `it()`:
@@ -81,8 +81,8 @@ describe(
 #> Test passed
 ```
 
-`bddR` functions can also it can be dropped into the `desc` argument of
-`test_that()`:
+`pickler` functions can also it can be dropped into the `desc` argument
+of `test_that()`:
 
 ``` r
 test_that(
@@ -100,5 +100,5 @@ test_that(
 ```
 
 Check out the [Getting Started
-vignette](https://mjfrigaard.github.io/bddR/articles/start.html) to
+vignette](https://mjfrigaard.github.io/pickler/articles/start.html) to
 learn more.

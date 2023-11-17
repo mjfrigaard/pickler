@@ -17,16 +17,22 @@ Bundle BDD functions
 }
 \examples{
 bundle(
-  feature(title = "Visualization",
-          as_a = "user",
-          i_want = "to see the changes in the plot",
-          so_that = "I can visualize the impact of my customizations"),
-  background(title = "Launching the application",
-             given = "I have launched the application",
-             and = "it contains movie review data from IMDB and Rotten Tomatoes"),
-  scenario(title = "Viewing the Data Visualization",
-           given = "I have launched the application",
-           when = "I interact with the sidebar controls",
-           then = "the graph should update with the selected options")
+  feature(
+    title = "Visualization",
+    as_a = "user",
+    i_want = "to see the changes in the plot",
+    so_that = "I can visualize the impact of my customizations"
+  ),
+  background(
+    title = "Launching the application",
+    given = "I have launched the application",
+    and = "it contains movie review data from IMDB and Rotten Tomatoes"
+  ),
+  scenario(
+    title = "Viewing the Data Visualization",
+    given = "I have launched the application",
+    when = "I interact with the sidebar controls",
+    then = "the graph should update with the selected options"
+  )
 )
 }

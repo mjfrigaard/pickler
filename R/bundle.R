@@ -8,98 +8,84 @@
 #'
 #' @examples
 #' bundle(
-#'   feature(title = "Visualization",
-#'           as_a = "user",
-#'           i_want = "to see the changes in the plot",
-#'           so_that = "I can visualize the impact of my customizations"),
-#'   background(title = "Launching the application",
-#'              given = "I have launched the application",
-#'              and = "it contains movie review data from IMDB and Rotten Tomatoes"),
-#'   scenario(title = "Viewing the Data Visualization",
-#'            given = "I have launched the application",
-#'            when = "I interact with the sidebar controls",
-#'            then = "the graph should update with the selected options")
+#'   feature(
+#'     title = "Visualization",
+#'     as_a = "user",
+#'     i_want = "to see the changes in the plot",
+#'     so_that = "I can visualize the impact of my customizations"
+#'   ),
+#'   background(
+#'     title = "Launching the application",
+#'     given = "I have launched the application",
+#'     and = "it contains movie review data from IMDB and Rotten Tomatoes"
+#'   ),
+#'   scenario(
+#'     title = "Viewing the Data Visualization",
+#'     given = "I have launched the application",
+#'     when = "I interact with the sidebar controls",
+#'     then = "the graph should update with the selected options"
+#'   )
 #' )
 bundle <- function(...) {
-
-    x <- list(...)
-
-    nms <- names(x)
+  x <- list(...)
+  assign_list_names <- function(input_list) {
+    # get current names
+    nms <- names(input_list)
+    # get names as characters
     nms_chrs <- unlist(lapply(nms, nchar)) > 1
+    # subset list with names
     list_names <- nms[nms_chrs]
+    # get existing name positions
+    nms_pos <- grep(pattern = paste0(list_names, collapse = "|"),
+                    x = names(input_list))
 
-    fpos <- grep(pattern = "Feature", x = x)
-    bpos <- grep(pattern = "Background", x = x)
-    spos <- grep(pattern = "Scenario", x = x)
+    # check for feature names
+    fpos <- grep(pattern = "Feature", x = input_list)
+    # check for background names
+    bpos <- grep(pattern = "Background", x = input_list)
+    # check for scenario names
+    spos <- grep(pattern = "Scenario", x = input_list)
 
-    if (sum(fpos) >= 1 & sum(bpos) >= 1 & sum(spos) >= 1) {
-      names(x)[fpos] <- "Feature"
-      names(x)[fpos] <- "Background"
-      names(x)[spos] <- "Scenario"
-    } else if (sum(fpos) >= 1 & sum(bpos) >= 1 & sum(spos) < 1) {
-      names(x)[fpos] <- "Feature"
-      names(x)[bpos] <- "Background"
-    } else if (sum(fpos) >= 1 & sum(bpos) < 1 & sum(spos) >= 1) {
-      names(x)[fpos] <- "Feature"
-      names(x)[spos] <- "Scenario"
-    } else if (sum(fpos) < 1 & sum(bpos) >= 1 & sum(spos) >= 1) {
-      names(x)[bpos] <- "Background"
-      names(x)[spos] <- "Scenario"
-    } else if (sum(fpos) >= 1 & sum(bpos) < 1 & sum(spos) < 1) {
-      names(x)[fpos] <- "Feature"
-    } else if (sum(fpos) < 1 & sum(bpos) >= 1 & sum(spos) < 1) {
-      names(x)[bpos] <- "Background"
-    } else if (sum(fpos) < 1 & sum(bpos) < 1 & sum(spos) >= 1) {
-      names(x)[spos] <- "Scenario"
-    } else {
-      names(x) <- NULL
+    unnamed_list_items <- c(
+      "feature" = fpos,
+      "background" = bpos,
+      "scenario" = spos
+    )
+    named_list_items <- nms_pos
+    names(named_list_items) <- list_names
+
+    orig_item_order <- as.list(sort(c(unnamed_list_items, named_list_items)))
+
+    # build list with item order
+    output_list <- list()
+
+    # use existing positions to assign previous names
+    if (sum(nms_pos) > 0) {
+      output_list <- sapply(
+        X = input_list[nms_pos],
+        FUN = append,
+        output_list,
+        simplify = TRUE,
+        USE.NAMES = FALSE
+      )
     }
-
-    glue::glue_collapse(
-      x,
-      sep = "\n")
+    # use position to set name
+    if (sum(fpos) > 0) {
+      output_list$feature <- input_list[[fpos]]
+    }
+    # use position to set name
+    if (sum(bpos) > 0) {
+      output_list$background <- input_list[[bpos]]
+    }
+    # use position to set name
+    if (sum(spos) > 0) {
+      output_list$scenario <- input_list[[spos]]
+    }
+    # reorder items
+    output_list[match(names(orig_item_order), names(output_list))]
+  }
+  glue::glue_collapse(
+    assign_list_names(input_list = x),
+    sep = "\n"
+  )
 }
-
-
-# x <- list(
-#   background(
-#     title = "Input dataframe with text data",
-#     given = "a dataframe with text data",
-#     and = list(
-#                "a column prefix",
-#                "a specified column")),
-#
-# input = c("
-#                |value |name                      |
-#                |------|--------------------------|
-#                |1     |John                      |
-#                |2     |John, Jacob               |
-#                |3     |John, Jacob, Jingleheimer |
-#                "),
-#
-# output = c("
-#                |value |name                      |
-#                |------|--------------------------|
-#                |1     |John                      |
-#                |2     |John, Jacob               |
-#                |3     |John, Jacob, Jingleheimer |
-#                "),
-# feature(
-#   title = "Separate single column into multiple based on pattern",
-#   as_a = "user of split_cols() ",
-#   i_want = "to specify a separate column and a pattern to separate on",
-#   so_that = "a resulting dataframe contains the new separated columns.")
-# )
-#
-# nms <- names(x)
-# nms_chrs <- unlist(lapply(nms, nchar)) > 1
-# list_names <- nms[nms_chrs]
-#
-# list_names
-#
-# nms_pos <- grep(pattern = paste0(list_names, collapse = "|"), x = names(x))
-#
-# nms_pos
-#
-# x[nms_pos]
-
