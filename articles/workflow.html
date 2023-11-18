@@ -89,16 +89,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mjfrigaard.github.io/pickler/">pickler</a></span><span class="op">)</span></span></code></pre></div>
-<p>Make sure you have the latest version of <code>testthat</code>
-installed.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://pak.r-lib.org/" class="external-link">pak</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span>,</span>
-<span>    repos <span class="op">=</span> <span class="st">"http://cran.us.r-project.org"</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"r-lib/testthat"</span>, upgrade <span class="op">=</span> <span class="cn">TRUE</span>, ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mjfrigaard.github.io/pickler/">pickler</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://testthat.r-lib.org" class="external-link">testthat</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="test-development-workflow">Test development workflow<a class="anchor" aria-label="anchor" href="#test-development-workflow"></a>
@@ -145,21 +136,108 @@ information that’s essential to the development <em>process</em> (i.e.,
 proposed features, specficiations, user stories, etc.)</p>
 </div>
 <div class="section level2">
-<h2 id="behavior-driven-development">Behavior-driven development<a class="anchor" aria-label="anchor" href="#behavior-driven-development"></a>
+<h2 id="behavior-driven-development-functions">Behavior-driven development functions<a class="anchor" aria-label="anchor" href="#behavior-driven-development-functions"></a>
 </h2>
-<p>If you’ve adopted <code>testthat</code>’s BDD functions
-(<code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> and <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code>), you can include context
-(i.e., users, features, examples, and other development process
-information) for your tests directly in the test file. These functions
-are an excellent addition to the <code>testthat</code> package because
-we’re no longer confined to comments and the <code>desc</code> argument
-of <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> to document what <em>exactly</em> the test
-is testing.</p>
+<p><code>testthat</code>’s BDD functions (specifically
+<code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code>) allow us to include additional context for
+tests directly preceding the call to <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code> or
+<code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code>. It’s a little unorthodox, but we can compare
+the output of passing it() and <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> tests using
+<code><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">waldo::compare()</a></code> (the underlying package used in functions
+like <code><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal()</a></code>).</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">compare</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"make sure we did the thing right"</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span>object <span class="op">=</span> <span class="cn">TRUE</span>, expected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span>, </span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span><span class="st">"make sure we did the thing right"</span>, <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span>object <span class="op">=</span> <span class="cn">TRUE</span>, expected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Test passed </span></span>
+<span><span class="co">#&gt; Test passed</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> No differences</span></span></code></pre></div>
+<p>The ‘secret sauce’ of <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> and <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code>
+is the ability to run <code>expect_*()</code> functions and return the
+logical (<code>TRUE</code>/pass or <code>FALSE</code>/fail).</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"make sure we did the thing right"</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span>object <span class="op">=</span> <span class="cn">TRUE</span>, expected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Test passed</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span><span class="st">"make sure we did the thing right"</span>, <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span>object <span class="op">=</span> <span class="cn">TRUE</span>, expected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Test passed</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>If we attempt to <code><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass()</a></code> the results of a failing
+test, we see an error is triggered (and both <code>actual</code> and
+<code>expected</code> values e sent off to
+<code><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">waldo::compare()</a></code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"make sure we did the thing right"</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span>object <span class="op">=</span> <span class="cn">FALSE</span>, expected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; -- Failure: make sure we did the thing right -----------------------------------</span></span>
+<span><span class="co">#&gt; FALSE (`actual`) not equal to TRUE (`expected`).</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; `actual`:   FALSE</span></span>
+<span><span class="co">#&gt; `expected`: TRUE</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Test failed</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span><span class="st">"make sure we did the thing right"</span>, <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span>object <span class="op">=</span> <span class="cn">FALSE</span>, expected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; -- Failure: make sure we did the thing right -----------------------------------</span></span>
+<span><span class="co">#&gt; FALSE (`actual`) not equal to TRUE (`expected`).</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; `actual`:   FALSE</span></span>
+<span><span class="co">#&gt; `expected`: TRUE</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Test failed</span></span></code></pre></div>
+<p>The <code>TRUE</code>/<code>FALSE</code> result is at the heart of
+all unit tests (i.e., “do the results meet my expectations?” Check ‘yes’
+or ‘no’).</p>
+<p>However, what happens if we wrap the same tests in
+<code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code>?</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span><span class="st">"verify we implemented the right thing"</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it</a></span><span class="op">(</span><span class="st">"make sure we did the thing right"</span>, <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span>object <span class="op">=</span> <span class="cn">TRUE</span>, expected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Test passed</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span><span class="st">"verify we implemented the right thing"</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"make sure we did the thing right"</span>, <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span>object <span class="op">=</span> <span class="cn">TRUE</span>, expected <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Test passed</span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p>We can see <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> returns a <code>NULL</code> value
+instead of the logical comparison from <code><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal()</a></code> (but
+it still returns the results of the test).</p>
+<div class="section level3">
+<h3 id="why-should-i-care">Why should I care?<a class="anchor" aria-label="anchor" href="#why-should-i-care"></a>
+</h3>
 <p>I’ll use a known issue with <code><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot()</a></code> and
 <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> to demonstrate how <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code>
 saves the day. Assume we have a function that generates output too
 complex to test with <code><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal()</a></code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pickler_logo.html">pickler_logo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;              d8b          888      888</span></span>
@@ -174,72 +252,85 @@ complex to test with <code><a href="https://testthat.r-lib.org/reference/equalit
 <span><span class="co">#&gt;     888</span></span>
 <span><span class="co">#&gt;     888</span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
-<p>We want to include a feature description for this function, so we
-place it in <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>We don’t want to visually inspect differences in
+<code><a href="../reference/pickler_logo.html">pickler_logo()</a></code>, so we’ll use a snapshot test to capture a
+baseline for comparison. Let’s start with <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code></p>
+</div>
+<div class="section level3">
+<h3 id="initial-test_that-snapshot-test">Initial test_that() snapshot test<a class="anchor" aria-label="anchor" href="#initial-test_that-snapshot-test"></a>
+</h3>
+<p>I’ve included a feature description in the <code>desc</code> argument
+for <code><a href="../reference/pickler_logo.html">pickler_logo()</a></code>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"</span></span>
 <span><span class="st">  Feature: Text-based Logo Generation</span></span>
-<span><span class="st">  As a As a user who calls the text_logo() function</span></span>
+<span><span class="st">  As a As a user who calls the pickler_logo() function</span></span>
 <span><span class="st">  I want to generate a text-based logo</span></span>
 <span><span class="st">  So that I can quickly insert the pickler logo"</span>, code <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot</a></span><span class="op">(</span><span class="fu"><a href="../reference/pickler_logo.html">pickler_logo</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>      <span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>The test creates the snapshot file:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>[ FAIL 0 | WARN 1 | SKIP 0 | PASS 1 ]</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>── Warning (test-pickler_logo.R:6:5): Feature: Text-based Logo Generation</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    In order to quickly insert the pickler logo</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    As a user who calls the text_logo() function</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    I want to generate a text-based logo ──</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Adding new snapshot:</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>Code</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  pickler_logo()</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>Output</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>               d8b          888      888</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>               Y8P          888      888</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                            888      888</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      88888b.  888  .d8888b 888  888 888  .d88b.  888d888</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      888 "88b 888 d88P"    888 .88P 888 d8P  Y8b 888P"</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      888  888 888 888      888888K  888 88888888 888</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      888 d88P 888 Y88b.    888 "88b 888 Y8b.     888</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      88888P"  888  "Y8888P 888  888 888  "Y8888  888</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      888</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      888</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      888</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>[ FAIL 0 | WARN 1 | SKIP 0 | PASS 1 ]</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">test_active_file</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>After the initial call to <code>test_active_file()</code>,
+<code>testthat</code> tells us the location of the snapshot file is
+<code>tests/testthat/_snaps/</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Feature: Text-based Logo Generation</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  As a As a user who calls the pickler_logo() function</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  I want to generate a text-based logo</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  So that I can quickly insert the pickler logo</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="in">    Code</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="in">      pickler_logo()</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="in">    Output</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="in">                   d8b          888      888</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="in">                   Y8P          888      888</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="in">                                888      888</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="in">          88888b.  888  .d8888b 888  888 888  .d88b.  888d888</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="in">          888 "88b 888 d88P"    888 .88P 888 d8P  Y8b 888P"</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="in">          888  888 888 888      888888K  888 88888888 888</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="in">          888 d88P 888 Y88b.    888 "88b 888 Y8b.     888</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="in">          88888P"  888  "Y8888P 888  888 888  "Y8888  888</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="in">          888</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="in">          888</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="in">          888</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="in">          </span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="subsequent-test_that-test-runs">Subsequent test_that() test runs<a class="anchor" aria-label="anchor" href="#subsequent-test_that-test-runs"></a>
+</h3>
 <p>Later we decide to change <code><a href="../reference/pickler_logo.html">pickler_logo()</a></code> by replacing
-the <code>\"</code> with <code>'</code>, but when we run the test:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>[ FAIL 0 | WARN 1 | SKIP 0 | PASS 1 ]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>── Warning (test-pickler_logo.R:6:5): Feature: Text-based Logo Generation</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    In order to quickly insert the pickler logo</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    As a user who calls the text_logo() function</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    I want to generate a text-based logo ──</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>Adding new snapshot:</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>Code</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  pickler_logo()</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>Output</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>               d8b          888      888</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>               Y8P          888      888</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                            888      888</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      88888b.  888  .d8888b 888  888 888  .d88b.  888d888</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      888  888 888 888      888888K  888 88888888 888</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      888 d88P 888 Y88b.    888 '88b 888 Y8b.     888</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      88888P'  888  'Y8888P 888  888 888  'Y8888  888</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>      888</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      888</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>      888</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>[ FAIL 0 | WARN 1 | SKIP 0 | PASS 1 ]</span></code></pre></div>
-<p>We just see another snapshot file is generated.</p>
-<p>However, if we provide the feature description in
-<code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code>, then only include <code><a href="../reference/pickler_logo.html">pickler_logo()</a></code>
-in the <code>desc</code> argument:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+the <code>\"</code> with <code>'</code>. After loading the changes, we
+notice that when we run the test again a <em>new snapshot file</em> is
+generated (and updated with the a new version of the logo):</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Feature: Text-based Logo Generation</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  As a As a user who calls the text_logo() function</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  I want to generate a text-based logo</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  So that I can quickly insert the pickler logo</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="in">    Code</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="in">      pickler_logo()</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="in">    Output</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="in">                   d8b          888      888</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="in">                   Y8P          888      888</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="in">                                888      888</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="in">          88888b.  888  .d8888b 888  888 888  .d88b.  888d888</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="in">          888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="in">          888  888 888 888      888888K  888 88888888 888</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="in">          888 d88P 888 Y88b.    888 '88b 888 Y8b.     888</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="in">          88888P'  888  'Y8888P 888  888 888  'Y8888  888</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="in">          888</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="in">          888</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="in">          888</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="in">          </span></span></code></pre></div>
+<p>However, if the contents of <code>desc</code> are placed in the
+<code>description</code> argument of <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code>, we see
+<code>testthat</code> detects the changes and asks us to review the
+snapshots.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;This currently &lt;a href="https://github.com/r-lib/testthat/issues/1900#issue-1995181567" class="external-link"&gt;an
+open issue on GitHub&lt;/a&gt;, but it looks like this &lt;a href="https://github.com/mjfrigaard/shinyap/issues/18#issuecomment-1816626915" class="external-link"&gt;can
+be solved with &lt;code&gt;paste()&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;'><sup>2</sup></a></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Feature: Text-based Logo Generation</span></span>
 <span><span class="st">    As a user who calls the text_logo() function</span></span>
@@ -249,42 +340,57 @@ in the <code>desc</code> argument:</p>
 <span>        <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot</a></span><span class="op">(</span><span class="fu"><a href="../reference/pickler_logo.html">pickler_logo</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>      <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>We see it detects the changes and the snapshot test fails:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>[ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>── Failure (test-pickler_logo.R:8:9): pickler_logo ─────────────────────────────</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>Snapshot of code has changed:</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>old[6:15] vs new[6:15]</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                 Y8P          888      888</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                              888      888</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        88888b.  888  .d8888b 888  888 888  .d88b.  888d888</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>-       888 "88b 888 d88P"    888 .88P 888 d8P  Y8b 888P"</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>+       888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        888  888 888 888      888888K  888 88888888 888</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>-       888 d88P 888 Y88b.    888 "88b 888 Y8b.     888</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>+       888 d88P 888 Y88b.    888 '88b 888 Y8b.     888</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>-       88888P"  888  "Y8888P 888  888 888  "Y8888  888</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>+       88888P'  888  'Y8888P 888  888 888  'Y8888  888</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        888</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        888</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        888</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>* Run testthat::snapshot_accept('pickler_logo') to accept the change.</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>* Run testthat::snapshot_review('pickler_logo') to interactively review the change.</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>[ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]</span></code></pre></div>
-<p><code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> allows us to include the relevant contextual
-information for the test (and it keeps the test scope confined to within
-the <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> call).</p>
-<p><br></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">test_active_file</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>[ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>── Failure (test-pickler_logo.R:8:9): pickler_logo ─────────────────────────────</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>Snapshot of code has changed:</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>old[6:15] vs new[6:15]</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                 Y8P          888      888</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                              888      888</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        88888b.  888  .d8888b 888  888 888  .d88b.  888d888</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>-       888 "88b 888 d88P"    888 .88P 888 d8P  Y8b 888P"</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>+       888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        888  888 888 888      888888K  888 88888888 888</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>-       888 d88P 888 Y88b.    888 "88b 888 Y8b.     888</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>+       888 d88P 888 Y88b.    888 '88b 888 Y8b.     888</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>-       88888P"  888  "Y8888P 888  888 888  "Y8888  888</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>+       88888P'  888  'Y8888P 888  888 888  'Y8888  888</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        888</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        888</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>        888</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>* Run testthat::snapshot_accept('pickler_logo') to accept the change.</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>* Run testthat::snapshot_review('pickler_logo') to interactively review the change.</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>[ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]</span></code></pre></div>
+<p>This is an example of how <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> gives us the
+ability to include context for tests (while keeping the scope confined
+to the tests within each <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> call).</p>
+</div>
+<div class="section level3">
+<h3 id="bdd-recap">BDD Recap<a class="anchor" aria-label="anchor" href="#bdd-recap"></a>
+</h3>
+<p>Multiline descriptions in the <code>desc</code> argument of
+<code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> can cause issues when used wtth
+<code><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot()</a></code>, but wrapping multiple lines in a call
+to<code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> prevents the test from overwriting the
+baseline snapshot file.</p>
+<p>The functionality provided by <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> is an excellent
+improvement to <code>testthat</code> tests, because we’re no longer
+confined to comments and the <code>desc</code> argument of
+<code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> to document what <em>exactly</em> the test is
+testing.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="rmd-bdd-pickler">Rmd + BDD = <code>pickler</code><a class="anchor" aria-label="anchor" href="#rmd-bdd-pickler"></a>
+</h2>
 <p>Including relevant context in <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">describe()</a></code> and
 <code><a href="https://testthat.r-lib.org/reference/describe.html" class="external-link">it()</a></code> is nice for developers, but I’ve found stakeholders
 and potential users rarely look the the <code>tests/</code> folder for
 information on a package’s features (or how it’s functions are supposed
 to behave).</p>
-</div>
-<div class="section level2">
-<h2 id="rmd-bdd-pickler">Rmd + BDD = <code>pickler</code><a class="anchor" aria-label="anchor" href="#rmd-bdd-pickler"></a>
-</h2>
 <p><code>pickler</code> was written to make the information in the
 <code>tests/</code> folder more accessible to a broader audience. The <a href="https://cucumber.io/docs/gherkin/reference/" class="external-link">Gherkin-style</a>
 functions availble in <code>pickler</code> are designed to work in R
@@ -292,8 +398,8 @@ Markdown (i.e. as a vignette) <em>and</em> run in a test file. It’s been
 pointed out elsewhere<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;This point in made in &lt;a href="https://engineering-shiny.org/building-ispum-app.html#rmd-vignettes-and-documentation-first" class="external-link"&gt;Engineering
 Production-Grade Shiny Apps&lt;/a&gt;, and although the text is geared towards
 developing a Shiny app-package, the quote is also applicable to
-non-Shiny R packages.&lt;/p&gt;'><sup>2</sup></a> that vignettes have a few characteristics
-that make them a great place development:</p>
+non-Shiny R packages.&lt;/p&gt;'><sup>3</sup></a> that vignettes have a few characteristics
+that make them a great place for development:</p>
 <p><br></p>
 <blockquote>
 <p><strong><em>“an R package implies writing documentation: one of the
