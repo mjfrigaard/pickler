@@ -1,8 +1,10 @@
 #' Pickler logos
 #'
+#' logo with `\"`
+#'
 #' @param size header size ("h1", "h2", "h3", "h4", "h5", "h6")
 #'
-#' @return HTML text logo
+#' @return text logo
 #'
 #' @export
 #'
@@ -22,6 +24,16 @@ pickler_logo <- function() {
     "
     )
 }
+#' alternate pickler logo 2
+#'
+#' logo with `'`
+#'
+#' @param size header size ("h1", "h2", "h3", "h4", "h5", "h6")
+#'
+#' @return text logo
+#'
+#' @keywords internal
+#'
 pickler_logo2 <- function() {
   cat("
              d8b          888      888

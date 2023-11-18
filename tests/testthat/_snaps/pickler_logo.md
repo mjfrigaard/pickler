@@ -1,4 +1,7 @@
-# pickler_logo
+# Feature: Text-based Logo Generation
+  As a As a user who calls the text_logo() function
+  I want to generate a text-based logo
+  So that I can quickly insert the pickler logo
 
     Code
       pickler_logo()
