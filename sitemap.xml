@@ -10,6 +10,9 @@
     <loc>https://mjfrigaard.github.io/pickler/articles/start.html</loc>
   </url>
   <url>
+    <loc>https://mjfrigaard.github.io/pickler/articles/workflow.html</loc>
+  </url>
+  <url>
     <loc>https://mjfrigaard.github.io/pickler/authors.html</loc>
   </url>
   <url>
@@ -38,6 +41,9 @@
   </url>
   <url>
     <loc>https://mjfrigaard.github.io/pickler/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://mjfrigaard.github.io/pickler/reference/pickler_logo.html</loc>
   </url>
   <url>
     <loc>https://mjfrigaard.github.io/pickler/reference/pivot_string_long.html</loc>
