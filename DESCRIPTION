@@ -4,7 +4,7 @@ Title: Write tests using Gherkin-style features, background, and scnearios.
 Version: 0.1.0
 Author: Martin Frigaard <mjfrigaard@pm.me> [aut, cre]
 Maintainer: Martin Frigaard <mjfrigaard@pm.me>
-Description: Behavior-driven development helpers for testing with testthat.
+Description: Behavior-driven development helpers for testthat tests.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
