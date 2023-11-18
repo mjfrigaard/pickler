@@ -1,0 +1,211 @@
+---
+title: "Workflow"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pickler)
+```
+
+Make sure you have the latest version of `testthat` installed.
+
+```{r testthat, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+if (!require(pak)) {
+  install.packages("pak",
+    repos = "http://cran.us.r-project.org"
+  )
+}
+pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
+library(testthat)
+```
+
+## Test development workflow
+
+In standard R packages, new functionality is added to `R/` with `usethis::use_r()`, followed by a corresponding test file in `tests/testthat/` with `usethis::use_test()`:
+
+-   [x] `use_r()`
+
+-   [x] `use_test()`
+
+While developing, these files can be accessed using the functions above, and tested interactively with `devtools::test_active_file()` and `devtools::test_coverage_active_file()`
+
+-   [x] `test_active_file()`
+
+-   [x] `test_coverage_active_file()`
+
+As the code in `R/` grows, the test suite might include additional features like fixtures, helpers, mocks, or a `setup.R` file. When a package has been sufficiently developed, the tests are run with `devtools::test()`, test coverage is reported with `devtools::test_coverage()`, and the (I'm assuming the package is checked periodicaly with `devtools::check()`, too):
+
+-   [x] `test()`
+
+-   [x] `test_coverage()`
+
+Additional package can be used to include test coverage reports ([`covrpage`](https://yonicd.github.io/covrpage/)), traceability matrices ([`covtracer`](https://genentech.github.io/covtracer/)), etc., to your package documentation.
+
+Throughout development, the functional requirements for your package are documented in `R/` (with `roxygen2`), and long-form documentation is placed in vignettes.[^1] Vignettes can (and should) be used to show users how your package works, especially if your package is going to be shared with the world (i.e., via a [`pkgdown` site](https://pkgdown.r-lib.org/)). However, it's not often developers use vignettes to store the information that's essential to the development *process* (i.e., proposed features, specficiations, user stories, etc.) 
+
+[^1]: The [vignettes](https://r-pkgs.org/vignettes.html#advice-on-writing-vignettes) chapter in R Packages, 2ed is a wonderful guide on writing that extends far beyond R packages.
+
+## Behavior-driven development
+
+If you've adopted `testthat`'s BDD functions (`describe()` and `it()`), you can include context (i.e., users, features, examples, and other development process information) for your tests directly in the test file. These functions are an excellent addition to the `testthat` package because we're no longer confined to comments and the `desc` argument of `test_that()` to document what *exactly* the test is testing.  
+
+I'll use a known issue with `expect_snapshot()` and `test_that()` to demonstrate how `describe()` saves the day. Assume we have a function that generates output too complex to test with `expect_equal()`:
+
+```{r, comment="#>"}
+pickler_logo()
+```
+
+We want to include a feature description for this function, so we place it in `test_that()`:
+
+```{r, eval=FALSE}
+test_that("
+  Feature: Text-based Logo Generation
+  As a As a user who calls the text_logo() function
+  I want to generate a text-based logo
+  So that I can quickly insert the pickler logo", code = {
+        expect_snapshot(pickler_logo())
+      })
+```
+
+The test creates the snapshot file: 
+
+```{verbatim}
+[ FAIL 0 | WARN 1 | SKIP 0 | PASS 1 ]
+
+── Warning (test-pickler_logo.R:6:5): Feature: Text-based Logo Generation
+    In order to quickly insert the pickler logo
+    As a user who calls the text_logo() function
+    I want to generate a text-based logo ──
+Adding new snapshot:
+Code
+  pickler_logo()
+Output
+  
+               d8b          888      888
+               Y8P          888      888
+                            888      888
+      88888b.  888  .d8888b 888  888 888  .d88b.  888d888
+      888 "88b 888 d88P"    888 .88P 888 d8P  Y8b 888P"
+      888  888 888 888      888888K  888 88888888 888
+      888 d88P 888 Y88b.    888 "88b 888 Y8b.     888
+      88888P"  888  "Y8888P 888  888 888  "Y8888  888
+      888
+      888
+      888
+      
+[ FAIL 0 | WARN 1 | SKIP 0 | PASS 1 ]
+```
+
+Later we decide to change `pickler_logo()` by replacing the `\"` with `'`, but when we run the test: 
+
+```{verbatim}
+[ FAIL 0 | WARN 1 | SKIP 0 | PASS 1 ]
+
+── Warning (test-pickler_logo.R:6:5): Feature: Text-based Logo Generation
+    In order to quickly insert the pickler logo
+    As a user who calls the text_logo() function
+    I want to generate a text-based logo ──
+Adding new snapshot:
+Code
+  pickler_logo()
+Output
+  
+               d8b          888      888
+               Y8P          888      888
+                            888      888
+      88888b.  888  .d8888b 888  888 888  .d88b.  888d888
+      888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'
+      888  888 888 888      888888K  888 88888888 888
+      888 d88P 888 Y88b.    888 '88b 888 Y8b.     888
+      88888P'  888  'Y8888P 888  888 888  'Y8888  888
+      888
+      888
+      888
+      
+[ FAIL 0 | WARN 1 | SKIP 0 | PASS 1 ]
+```
+
+We just see another snapshot file is generated. 
+
+However, if we provide the feature description in `describe()`, then only include `pickler_logo()` in the `desc` argument:
+
+```{r eval=FALSE}
+describe(
+  "Feature: Text-based Logo Generation
+    As a user who calls the text_logo() function
+    I want to generate a text-based logo
+    So that I can quickly insert the pickler logo", code = {
+      test_that("pickler_logo()", code = {
+        expect_snapshot(pickler_logo())
+      })
+})
+```
+
+We see it detects the changes and the snapshot test fails:
+
+```{verbatim}
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
+
+── Failure (test-pickler_logo.R:8:9): pickler_logo ─────────────────────────────
+Snapshot of code has changed:
+old[6:15] vs new[6:15]
+                 Y8P          888      888
+                              888      888
+        88888b.  888  .d8888b 888  888 888  .d88b.  888d888
+-       888 "88b 888 d88P"    888 .88P 888 d8P  Y8b 888P"
++       888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'
+        888  888 888 888      888888K  888 88888888 888
+-       888 d88P 888 Y88b.    888 "88b 888 Y8b.     888
++       888 d88P 888 Y88b.    888 '88b 888 Y8b.     888
+-       88888P"  888  "Y8888P 888  888 888  "Y8888  888
++       88888P'  888  'Y8888P 888  888 888  'Y8888  888
+        888
+        888
+        888
+
+* Run testthat::snapshot_accept('pickler_logo') to accept the change.
+* Run testthat::snapshot_review('pickler_logo') to interactively review the change.
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
+```
+
+`describe()` allows us to include the relevant contextual information for the test (and it keeps the test scope confined to within the `describe()` call).
+
+<br>
+
+Including relevant context in `describe()` and `it()` is nice for developers, but I've found stakeholders and potential users rarely look the the `tests/` folder for information on a package's features (or how it's functions are supposed to behave).
+
+## Rmd + BDD = `pickler` 
+
+`pickler` was written to make the information in the `tests/` folder more accessible to a broader audience. The [Gherkin-style](https://cucumber.io/docs/gherkin/reference/) functions availble in `pickler` are designed to work in R Markdown (i.e. as a vignette) *and* run in a test file. It's been pointed out elsewhere[^2] that vignettes have a few characteristics that make them a great place development:
+
+<br>
+
+> ***"an R package implies writing documentation: one of the main goals of the Vignettes, in an R package, is to document how to use the package. And the good news is that when checking a package, i.e. when running `check()` from `devtools` ([Wickham, Hester, and Chang 2020](https://devtools.r-lib.org/)) or `R CMD check`, the Vignettes are going to be built, and the process will fail if at least one of the Vignettes fails to render. That way, you can use the documentation of the back-end as an extra tool for doing unit testing!"***
+
+<br>
+
+[^2]: This point in made in [Engineering Production-Grade Shiny Apps](https://engineering-shiny.org/building-ispum-app.html#rmd-vignettes-and-documentation-first), and although the text is geared towards developing a Shiny app-package, the quote is also applicable to non-Shiny R packages. 
+
+
+```{r , eval=FALSE, include=FALSE, comment=""}
+feature(
+    title = "Text-based Logo Generation",
+    as_a = "As a user who calls the text_logo() function",
+    i_want = "to generate a text-based logo",
+    so_that = "I can quickly insert the pickler logo"
+    )
+```

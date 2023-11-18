@@ -194,7 +194,7 @@ feature(
   )
 ```
 
-You might be wondering why ypu'd bother passing this information into a function and not just include them in a language-agnostic fenced code block: 
+You might be wondering why you'd bother passing this information into a function and not just include them in a language-agnostic fenced code block: 
 
 ````verbatim
 ```

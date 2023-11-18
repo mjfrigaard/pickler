@@ -3,6 +3,7 @@
 export(background)
 export(bundle)
 export(feature)
+export(pickler_logo)
 export(pivot_string_long)
 export(process_text)
 export(rev_string)
