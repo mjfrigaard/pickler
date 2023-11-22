@@ -69,7 +69,7 @@ unclass(
 )
 ```
 
-If we attempt to `unclass()` the results of a failing test, we see that the returned `FALSE` value from `expect_equal()` triggers an error (and both `actual` and `expected` values e sent off to `waldo::compare()`):
+If we attempt to `unclass()` the results of a failing test, we see that the returned `FALSE` value from `expect_equal()` triggers an error (and both `actual` and `expected` values are sent off to `waldo::compare()`):
 
 ```{r, error=TRUE}
 unclass(
@@ -107,17 +107,7 @@ unclass(
 )
 ```
 
-
-```{r collapse=TRUE, error=TRUE}
-# test_that() failing test 
-unclass(
-  test_that("make sure we did the thing right", {
-    expect_equal(object = FALSE, expected = TRUE)
-  })
-)
-```
-
-We can see `describe()` returns a `NULL` value instead of the logical comparison from `expect_equal()` (but it still returns the results of the test).
+We can see `describe()` returns a `NULL` value instead of the logical comparison from `expect_equal()` (but it still returns the results of the failed test).
 
 ## Use case: expect_snapshot() 
 
@@ -151,7 +141,7 @@ After the initial call to `test_active_file()`, `testthat` tells us the location
 
 ```markdown
 # Feature: Text-based Logo Generation
-  As a As a user who calls the pickler_logo() function
+  As a user who calls the pickler_logo() function
   I want to generate a text-based logo
   So that I can quickly insert the pickler logo
 
@@ -182,7 +172,7 @@ Later, we change `pickler_logo()` by replacing the `\"` with `'`.[^pickler-logo-
 
 ```markdown
 # Feature: Text-based Logo Generation
-  As a As a user who calls the text_logo() function
+  As a user who calls the pickler_logo() function
   I want to generate a text-based logo
   So that I can quickly insert the pickler logo
 
@@ -205,10 +195,45 @@ Later, we change `pickler_logo()` by replacing the `\"` with `'`.[^pickler-logo-
 
 ```
 
+
+
+We can compare these outputs directly by saving each markdown file in `tests/testthat/fixtures/` and reading them into a test with `test_path()`:
+
+```{r echo=FALSE}
+fs::dir_tree("../tests/testthat/fixtures")
+```
+
+
+```{r , eval=FALSE}
+waldo::compare(
+  x = readLines(con = test_path("fixtures", "pickler_logo_snap.md")),
+  y = readLines(con = test_path("fixtures", "pickler_logo2_snap.md"))
+)
+```
+
+This shows the changes but includes the escape characters from `readLines()`: 
+
+```{verbatim}
+old[3:12] vs new[3:12]
+  "                   Y8P          888      888"
+  "                                888      888"
+  "          88888b.  888  .d8888b 888  888 888  .d88b.  888d888"
+- "          888 \"88b 888 d88P\"    888 .88P 888 d8P  Y8b 888P\""
++ "          888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'"
+  "          888  888 888 888      888888K  888 88888888 888"
+- "          888 d88P 888 Y88b.    888 \"88b 888 Y8b.     888"
++ "          888 d88P 888 Y88b.    888 '88b 888 Y8b.     888"
+- "          88888P\"  888  \"Y8888P 888  888 888  \"Y8888  888"
++ "          88888P'  888  'Y8888P 888  888 888  'Y8888  888"
+  "          888"
+  "          888"
+  "          888"
+```
+
+
 However, if the contents of `desc` are placed in the `description` argument of `describe()`, we see `testthat` detects the changes and asks us to review the snapshots.[^desc-expect-snapshot-issue]
 
 [^desc-expect-snapshot-issue]: This currently [an open issue on GitHub](https://github.com/r-lib/testthat/issues/1900#issue-1995181567), but it looks like this [can be solved with `paste()`](https://github.com/mjfrigaard/shinyap/issues/18#issuecomment-1816626915)
-
 
 ```{r eval=FALSE}
 describe(
