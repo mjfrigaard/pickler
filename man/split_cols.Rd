@@ -2,30 +2,55 @@
 % Please edit documentation in R/split_cols.R
 \name{split_cols}
 \alias{split_cols}
-\title{Split column into multiple columns}
+\title{Split a column into multiple columns based on a pattern}
 \usage{
 split_cols(data, col, pattern = "[^[:alnum:]]+", col_prefix = "col")
 }
 \arguments{
-\item{data}{a \code{data.frame} or \code{tibble}}
+\item{data}{A \code{data.frame} or \code{tibble} in with a column to split.}
 
-\item{col}{column to split}
+\item{col}{name of the character column to split}
 
-\item{pattern}{regular expression pattern passed to \code{strsplit()}}
+\item{pattern}{regular expression used to define the split points in the
+column's values. The default is "[^\link{:alnum:}]+", which matches one or more
+non-alphanumeric characters.}
 
-\item{col_prefix}{prefix for new columns}
+\item{col_prefix}{prefix to use for the columns created from the split. The
+default prefix is \code{col_}.}
 }
 \value{
-data.frame with split columns
+A data frame with the original columns and the new columns created
+from splitting the specified column.
 }
 \description{
-\strong{This is a function for testing pickler.}
+\code{split_cols()} splits a specific column into multiple columns based on a
+provided pattern (new columns can have a specified prefix).
 }
+\section{Details}{
+
+The function verifies the input types and the presence of the column to be
+split in the data frame. It then splits the specified column into a list of
+vectors, finds the maximum number of elements from these vectors, and pads
+shorter vectors with \code{NA} to align all vectors to the same length. These
+vectors are then combined into new columns and appended to the original
+data frame.
+}
+
+\section{Checks}{
+
+The function will stop and throw an error if any of the input conditions are
+not met, ensuring that the input \code{data.frame}, column name, pattern, and
+column prefix are all correctly specified and formatted before proceeding.
+}
+
 \examples{
 d <- data.frame(value = c(29L, 91L, 39L, 28L, 12L),
                 name = c("John", "John, Jacob",
                          "John, Jacob, Jingleheimer",
                          "Jingleheimer, Schmidt",
                          "JJJ, Schmidt"))
+# no prefix
+split_cols(data = d, col = "name")
+# with prefix
 split_cols(data = d, col = "name", col_prefix = "names")
 }

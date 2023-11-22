@@ -2,28 +2,46 @@
 % Please edit documentation in R/rev_string.R
 \name{rev_string}
 \alias{rev_string}
-\title{Reverse strings (function for testing)}
+\title{Reverse a String}
 \usage{
 rev_string(string)
 }
 \arguments{
-\item{string}{string}
+\item{string}{A single string that the user wants to reverse.}
 }
 \value{
-reversed string
+\code{rev_string()} does not return values to the console, because it
+modifies the input variable directly by assigning the value to the original
+input object in the global environment (i.e., with
+\code{assign(envir =.GlobalEnv)}).  To see the result, print the original
+variable after calling this function.
 }
 \description{
-\strong{This is a function for testing pickler.}
+Takes a single string as input, reverses the characters in the string,
+and reassigns the reversed string to the variable in the global environment.
 }
-\section{More info}{
+\section{What it does}{
 
+\code{rev_string()} splits an input string into its individual characters,
+reverses their order, and then collapses them back into a single string. The
+result is then assigned to the original variable name provided as input in
+the global environment.
+}
 
-The original code for this function is from \href{https://stackoverflow.com/questions/56428360/modify-the-object-without-using-return-in-r-function}{this StackOverflow post}. I've included it because of it uses \code{deparse(substitute())} and \code{assign()} (which makes for interesting tests).
+\section{How it Works}{
+
+The function uses several base R functions to achieve the reversal:
+\itemize{
+\item \code{deparse(substitute(string))}: gets the name of the input variable as a string
+\item \code{strsplit()}: splits the input string into a list of single characters
+\item \code{rev()}: to reverse the list
+\item \code{paste(..., collapse = "")}: to combine the characters back into a single string
+\item \code{assign()}: to reassign the reversed string to the original variable name in the global environment.
+}
 }
 
 \examples{
-## NOT RUN
-# a <- "StackOverFlow"
-# rev_string(a)
-# a
+my_string <- "hello"
+rev_string(my_string)
+print(my_string) # outputs "olleh"
 }

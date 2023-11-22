@@ -1,0 +1,261 @@
+---
+title: "BDD functions: use case"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BDD functions: use case}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  error = TRUE
+)
+# Make sure you have the latest version of `estthat and sloop installed.
+# if (!require(sloop)) {
+#   install.packages("sloop",
+#     repos = "http://cran.us.r-project.org"
+#   )
+# }
+# pak::pkg_install("r-lib/sloop", upgrade = TRUE, ask = FALSE)
+# 
+# if (!require(pak)) {
+#   install.packages("pak",
+#     repos = "http://cran.us.r-project.org"
+#   )
+# }
+# pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
+```
+
+```{r pkgs}
+library(pickler)
+library(testthat)
+```
+
+## Behavior-driven development functions
+
+`testthat`'s BDD functions (specifically `describe()`) allow us to include additional context for tests directly preceding the call to `it()` or `test_that()`. `TRUE`/`FALSE` results are at the heart of all unit tests (i.e., "do the results meet my expectations?" Check 'yes' or 'no').
+
+### it()
+
+It's a little unorthodox, but we can compare the output of passing `it()` and `test_that()` tests using `waldo::compare()` (the underlying package used in functions like `expect_equal()`). 
+
+```{r collapse=TRUE}
+waldo::compare(
+  test_that("make sure we did the thing right", {
+    expect_equal(object = TRUE, expected = TRUE)
+  }), 
+    it("make sure we did the thing right", {
+      expect_equal(object = TRUE, expected = TRUE)
+  })
+)
+```
+
+These two functions have no notably different behaviors. The 'secret sauce' of `test_that()` and `it()` is the ability to run `expect_*()` functions and return the logical (`TRUE`/pass or `FALSE`/fail). 
+
+```{r collapse=TRUE}
+unclass(
+  test_that("make sure we did the thing right", {
+    expect_equal(object = TRUE, expected = TRUE)
+  })
+)
+unclass(
+    it("make sure we did the thing right", {
+      expect_equal(object = TRUE, expected = TRUE)
+  })
+)
+```
+
+If we attempt to `unclass()` the results of a failing test, we see that the returned `FALSE` value from `expect_equal()` triggers an error (and both `actual` and `expected` values e sent off to `waldo::compare()`):
+
+```{r, error=TRUE}
+unclass(
+  test_that("make sure we did the thing right", {
+    expect_equal(object = FALSE, expected = TRUE)
+  })
+)
+unclass(
+    it("make sure we did the thing right", {
+      expect_equal(object = FALSE, expected = TRUE)
+  })
+)
+```
+
+### describe()
+
+However, what happens if we wrap the same tests in `describe()`? The returned value for a passing test a message and a `NULL` value, but failing tests return identical output to tests that aren't wrapped in `describe()`: 
+
+```{r collapse=TRUE, error=TRUE}
+# describe() + test_that() passing test 
+unclass(
+  describe("verify we implemented the right thing", {
+    test_that("make sure we did the thing right", {
+      expect_equal(object = TRUE, expected = TRUE)
+    })
+  })
+)
+# describe() + test_that() failing test 
+unclass(
+  describe("verify we implemented the right thing", {
+    test_that("make sure we did the thing right", {
+      expect_equal(object = FALSE, expected = TRUE)
+    })
+  })
+)
+```
+
+
+```{r collapse=TRUE, error=TRUE}
+# test_that() failing test 
+unclass(
+  test_that("make sure we did the thing right", {
+    expect_equal(object = FALSE, expected = TRUE)
+  })
+)
+```
+
+We can see `describe()` returns a `NULL` value instead of the logical comparison from `expect_equal()` (but it still returns the results of the test).
+
+## Use case: expect_snapshot() 
+
+I'll use a known issue with `expect_snapshot()` and `test_that()` to demonstrate how `describe()` saves the day. Assume we have a function that generates output too complex to test with `expect_equal()`:
+
+```{r, comment="#>"}
+pickler_logo()
+```
+
+We don't want to visually inspect differences in `pickler_logo()`, so we'll use a snapshot test to capture a baseline for comparison. Let's start with `test_that()`
+
+### Initial test_that() snapshot test
+
+I've included a feature description in the `desc` argument for `pickler_logo()`:
+
+```{r, eval=FALSE}
+test_that("
+  Feature: Text-based Logo Generation
+  As a user who calls the pickler_logo() function
+  I want to generate a text-based logo
+  So that I can quickly insert the pickler logo", code = {
+        expect_snapshot(pickler_logo())
+      })
+```
+
+```{r ,eval=FALSE}
+devtools::test_active_file()
+```
+
+After the initial call to `test_active_file()`, `testthat` tells us the location of the snapshot file is `tests/testthat/_snaps/`:
+
+```markdown
+# Feature: Text-based Logo Generation
+  As a As a user who calls the pickler_logo() function
+  I want to generate a text-based logo
+  So that I can quickly insert the pickler logo
+
+    Code
+      pickler_logo()
+    Output
+      
+                   d8b          888      888
+                   Y8P          888      888
+                                888      888
+          88888b.  888  .d8888b 888  888 888  .d88b.  888d888
+          888 "88b 888 d88P"    888 .88P 888 d8P  Y8b 888P"
+          888  888 888 888      888888K  888 88888888 888
+          888 d88P 888 Y88b.    888 "88b 888 Y8b.     888
+          88888P"  888  "Y8888P 888  888 888  "Y8888  888
+          888
+          888
+          888
+          
+
+```
+
+### Subsequent test_that() test runs
+
+Later, we change `pickler_logo()` by replacing the `\"` with `'`.[^pickler-logo-change] After loading the changes, we notice that when we run the test again a *new snapshot file* is generated (and updated with the a new version of the logo):
+
+[^pickler-logo-change]: You can view the changed version of the function [here](https://github.com/mjfrigaard/pickler/blob/072a41c82ea3807d7b3097917d67ac21a139cf30/R/pickler_logo.R#L27)
+
+```markdown
+# Feature: Text-based Logo Generation
+  As a As a user who calls the text_logo() function
+  I want to generate a text-based logo
+  So that I can quickly insert the pickler logo
+
+    Code
+      pickler_logo()
+    Output
+      
+                   d8b          888      888
+                   Y8P          888      888
+                                888      888
+          88888b.  888  .d8888b 888  888 888  .d88b.  888d888
+          888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'
+          888  888 888 888      888888K  888 88888888 888
+          888 d88P 888 Y88b.    888 '88b 888 Y8b.     888
+          88888P'  888  'Y8888P 888  888 888  'Y8888  888
+          888
+          888
+          888
+          
+
+```
+
+However, if the contents of `desc` are placed in the `description` argument of `describe()`, we see `testthat` detects the changes and asks us to review the snapshots.[^desc-expect-snapshot-issue]
+
+[^desc-expect-snapshot-issue]: This currently [an open issue on GitHub](https://github.com/r-lib/testthat/issues/1900#issue-1995181567), but it looks like this [can be solved with `paste()`](https://github.com/mjfrigaard/shinyap/issues/18#issuecomment-1816626915)
+
+
+```{r eval=FALSE}
+describe(
+  "Feature: Text-based Logo Generation
+    As a user who calls the text_logo() function
+    I want to generate a text-based logo
+    So that I can quickly insert the pickler logo", code = {
+      test_that("pickler_logo()", code = {
+        expect_snapshot(pickler_logo())
+      })
+})
+```
+
+```{r ,eval=FALSE}
+devtools::test_active_file()
+```
+
+
+```{verbatim}
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
+
+── Failure (test-pickler_logo.R:8:9): pickler_logo ─────────────────────────────
+Snapshot of code has changed:
+old[6:15] vs new[6:15]
+                 Y8P          888      888
+                              888      888
+        88888b.  888  .d8888b 888  888 888  .d88b.  888d888
+-       888 "88b 888 d88P"    888 .88P 888 d8P  Y8b 888P"
++       888 '88b 888 d88P'    888 .88P 888 d8P  Y8b 888P'
+        888  888 888 888      888888K  888 88888888 888
+-       888 d88P 888 Y88b.    888 "88b 888 Y8b.     888
++       888 d88P 888 Y88b.    888 '88b 888 Y8b.     888
+-       88888P"  888  "Y8888P 888  888 888  "Y8888  888
++       88888P'  888  'Y8888P 888  888 888  'Y8888  888
+        888
+        888
+        888
+
+* Run testthat::snapshot_accept('pickler_logo') to accept the change.
+* Run testthat::snapshot_review('pickler_logo') to interactively review the change.
+[ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
+```
+
+This is an example of how `describe()` gives us the ability to include context for tests (while keeping the scope confined to the tests within each `describe()` call). 
+
+### BDD Recap 
+
+Multiline descriptions in the `desc` argument of `test_that()` can cause issues when used wtth `expect_snapshot()`, but wrapping multiple lines in a call to` describe()` prevents the test from overwriting the baseline snapshot file.
+
+The functionality provided by `describe()` is an excellent improvement to `testthat` tests, because we're no longer confined to comments and the `desc` argument of `test_that()` to document what *exactly* the test is testing. 

@@ -10,7 +10,7 @@ check_string(x)
 \item{x}{input argument}
 }
 \value{
-invisible is passes, alert if fails
+\code{TRUE} is passes, alert + \code{FALSE} if fails
 }
 \description{
 Check for string (rlang util)

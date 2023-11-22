@@ -37,7 +37,7 @@ pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
 #> ✔ Loading metadata database ... done
 #>  
 #> ℹ No downloads are needed
-#> ✔ 1 pkg + 32 deps: kept 33 [7.8s]
+#> ✔ 1 pkg + 32 deps: kept 33 [9.2s]
 library(testthat)
 ```
 
