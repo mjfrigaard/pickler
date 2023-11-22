@@ -48,11 +48,17 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/bdd-use-case.html">BDD functions: use case</a>
-    <a class="dropdown-item" href="../articles/bundling.html">Bundling</a>
+    <h6 class="dropdown-header" data-toc-skip>Start</h6>
     <a class="dropdown-item" href="../articles/start.html">Getting started</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Workflow</h6>
+    <a class="dropdown-item" href="../articles/workflow.html">Test development</a>
+    <h6 class="dropdown-header" data-toc-skip>BDD</h6>
+    <a class="dropdown-item" href="../articles/bdd-use-case.html">BDD example</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Examples</h6>
+    <a class="dropdown-item" href="../articles/bundling.html">Bundling</a>
     <a class="dropdown-item" href="../articles/tables.html">Tables</a>
-    <a class="dropdown-item" href="../articles/workflow.html">Workflow</a>
   </div>
 </li>
 <li class="nav-item">
@@ -104,7 +110,7 @@ installed.</p>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"r-lib/testthat"</span>, upgrade <span class="op">=</span> <span class="cn">TRUE</span>, ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://testthat.r-lib.org" class="external-link">testthat</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="tables">Tables<a class="anchor" aria-label="anchor" href="#tables"></a>
+<h2 id="inputs">Inputs<a class="anchor" aria-label="anchor" href="#inputs"></a>
 </h2>
 <p>It’s also possible to provide a table in a scenario or feature. Let’s
 assume we have a small <code>input</code> that illustrates an example
@@ -138,6 +144,10 @@ Background: Input text data
   Given a string or vector [string] with text columns
   And a specified pattern [sep]
 one-two-three</code></pre>
+</div>
+<div class="section level2">
+<h2 id="outputs">Outputs<a class="anchor" aria-label="anchor" href="#outputs"></a>
+</h2>
 <p>If we know we know what we the <code>output</code> table should look
 like, we can include it with the <code>scenario</code>: We can convert
 <code>output</code> to a Gherkin-style table using
@@ -252,7 +262,8 @@ file</a> contains a fully scoped test with everything documented:</p>
 <p>it passes!</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>[ FAIL 0 | WARN 0 | SKIP 0 | PASS 1 ]</span></code></pre></div>
 </div>
-  </main>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

@@ -24,11 +24,17 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/bdd-use-case.html">BDD functions: use case</a>
-    <a class="dropdown-item" href="../articles/bundling.html">Bundling</a>
+    <h6 class="dropdown-header" data-toc-skip>Start</h6>
     <a class="dropdown-item" href="../articles/start.html">Getting started</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Workflow</h6>
+    <a class="dropdown-item" href="../articles/workflow.html">Test development</a>
+    <h6 class="dropdown-header" data-toc-skip>BDD</h6>
+    <a class="dropdown-item" href="../articles/bdd-use-case.html">BDD example</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Examples</h6>
+    <a class="dropdown-item" href="../articles/bundling.html">Bundling</a>
     <a class="dropdown-item" href="../articles/tables.html">Tables</a>
-    <a class="dropdown-item" href="../articles/workflow.html">Workflow</a>
   </div>
 </li>
 <li class="nav-item">
@@ -54,9 +60,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a></h2>
       
-      
+      <p class="section-desc"></p><p>Provide context and preconditions for tests.</p>
 
       
     </div><div id="" class="section level2">
@@ -69,21 +75,96 @@
           <code><a href="background.html">background()</a></code> 
         </dt>
         <dd>BDD background</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="scenarios">Scenarios<a class="anchor" aria-label="anchor" href="#scenarios"></a></h2>
+      
+      <p class="section-desc"></p><p>Illustrate a concrete example.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
-          <code><a href="bundle.html">bundle()</a></code> 
+          <code><a href="scenario.html">scenario()</a></code> 
         </dt>
-        <dd>Bundle BDD functions</dd>
-      </dl><dl><dt>
+        <dd>BDD scenario</dd>
+      </dl></div><div class="section level2">
+      <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a></h2>
+      
+      <p class="section-desc"></p><p>A deliverable behavior or functionality.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="feature.html">feature()</a></code> 
         </dt>
         <dd>BDD Feature</dd>
+      </dl></div><div class="section level2">
+      <h2 id="bundle">Bundle<a class="anchor" aria-label="anchor" href="#bundle"></a></h2>
+      
+      <p class="section-desc"></p><p>Combine features, background, and scenario.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="bundle.html">bundle()</a></code> 
+        </dt>
+        <dd>Bundle BDD functions</dd>
+      </dl></div><div class="section level2">
+      <h2 id="tables">Tables<a class="anchor" aria-label="anchor" href="#tables"></a></h2>
+      
+      <p class="section-desc"></p><p>Add tables to features, background, and scenario.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="with_table.html">with_table()</a></code> 
+        </dt>
+        <dd>Add Gherkin-style table</dd>
+      </dl></div><div class="section level2">
+      <h2 id="functions-for-testing">Functions for testing<a class="anchor" aria-label="anchor" href="#functions-for-testing"></a></h2>
+      
+      <p class="section-desc"></p><p>A collection of functions for testing</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="check_string.html">check_string()</a></code> 
+        </dt>
+        <dd>Check for string (rlang util)</dd>
       </dl><dl><dt>
           
           <code><a href="pickler_logo.html">pickler_logo()</a></code> 
         </dt>
         <dd>Pickler logos</dd>
+      </dl><dl><dt>
+          
+          <code><a href="pickler_logo2.html">pickler_logo2()</a></code> 
+        </dt>
+        <dd>alternate pickler logo 2</dd>
       </dl><dl><dt>
           
           <code><a href="pivot_string_long.html">pivot_string_long()</a></code> 
@@ -96,26 +177,17 @@
         <dd>Process names and text in dataset</dd>
       </dl><dl><dt>
           
-          <code><a href="rev_string.html">rev_string()</a></code> 
-        </dt>
-        <dd>Reverse a String</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scenario.html">scenario()</a></code> 
-        </dt>
-        <dd>BDD scenario</dd>
-      </dl><dl><dt>
-          
           <code><a href="split_cols.html">split_cols()</a></code> 
         </dt>
         <dd>Split a column into multiple columns based on a pattern</dd>
       </dl><dl><dt>
           
-          <code><a href="with_table.html">with_table()</a></code> 
+          <code><a href="rev_string.html">rev_string()</a></code> 
         </dt>
-        <dd>Add Gherkin-style table</dd>
+        <dd>Reverse a String</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
