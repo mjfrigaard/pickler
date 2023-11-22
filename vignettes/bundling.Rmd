@@ -1,0 +1,120 @@
+---
+title: "Bundling"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bundling}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(testthat)
+```
+
+```{r setup}
+library(pickler)
+```
+
+Make sure you have the latest version of `testthat` installed.
+
+```{r testthat, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+if (!require(pak)) {
+  install.packages("pak",
+    repos = "http://cran.us.r-project.org"
+  )
+}
+pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
+library(testthat)
+```
+
+
+## Bundling 
+
+Ideally, `pickler`'s functions are developed independently and then wrapped in a `bundle()` before passing to the `testthat` BDD functions. Consider the `feature()` and `scenario()` below for the `split_cols()` function:
+
+```{r , eval=FALSE}
+bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]"))
+)
+```
+
+Bundling makes it easier to combine features and backgrounds into a single call:
+
+```{r , echo=FALSE, eval=TRUE, comment=""}
+bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]"))
+)
+```
+
+`bundle()` also allows us to pass a `feature()` and `background()` to `describe()`, then test a particular `scenario()` with `it()`:
+
+```{r}
+describe(
+  # bundle feature and background
+  bundle(
+  feature(
+    title = "Split a single column into multiple columns using a pattern",
+    as_a = "user of split_cols()",
+    i_want = "to specify a column and a pattern",
+    so_that = "I can quickly generate multiple columns."
+  ),
+  background(
+    title = "Input dataframe with text data", 
+    given = "a dataframe [data] with text columns", 
+    and = list(
+               "a column prefix [cols_]", 
+               "a specified column [col]"))
+), code = {
+    it(
+    # test scenario 1
+     scenario(
+        title = "Split column with a default pattern",
+        given = "a dataframe [data] with a specified column [col]",
+        when = "I split the [col] column using the default [[^[:alnum:]]+]",
+        then = "the [col] column should be split into multiple columns"
+      ), code = {
+      
+      expect_true(TRUE)
+      
+    })
+    it(
+    # test scenario 2
+     scenario(
+        title = "Split column with a default pattern",
+        given = "a dataframe [data] with a specified column [col]",
+        when = "I split the [col] column using the default [[^[:alnum:]]+]",
+        then = "the new columns should be named with the default prefix [cols_]"
+      ), code = {
+      
+      expect_true(TRUE)
+      
+    })
+  })
+```
+

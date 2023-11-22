@@ -45,7 +45,7 @@
 pivot_string_long <- function(string, sep = "[^[:alnum:]]+") {
 
   pivot_string <- function(string, sep) {
-      string_items <- unlist(strsplit(string, sep))
+      string_items <- unlist(strsplit(unname(string), sep))
       string_col <- c(string, rep(NA_character_, times = length(string_items) - 1))
       data.frame(unique_items = string_items, string = string_col)
   }

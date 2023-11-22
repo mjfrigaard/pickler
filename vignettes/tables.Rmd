@@ -1,0 +1,219 @@
+---
+title: "Tables"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(testthat)
+```
+
+
+```{r setup}
+library(pickler)
+```
+
+Make sure you have the latest version of `testthat` installed.
+
+```{r testthat, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+if (!require(pak)) {
+  install.packages("pak",
+    repos = "http://cran.us.r-project.org"
+  )
+}
+pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
+library(testthat)
+```
+
+
+## Tables
+
+It's also possible to provide a table in a scenario or feature. Let's assume we have a small `input` that illustrates an example behavior for our `pivot_string_long()` function:
+
+```{r , echo=FALSE}
+input <- c(input = "one-two-three")
+```
+
+```{r, comment="#>"}
+input
+```
+
+We can include `input` in our bundle with the `feature()` and `scenario()`:
+
+```{r , eval=FALSE}
+bundle(
+  feature(
+    title = "Pivot String Long",
+    as_a = "user of pivot_string_long()",
+    i_want = "to specify a text column and a pattern",
+    so_that = "peform computations on the unique items."
+  ),
+  background(
+    title = "Input text data", 
+    given = "a string or vector [string] with text columns", 
+    and = "a specified pattern [sep]"),
+  
+  input = c("one-two-three")
+)
+```
+
+```{r , echo=FALSE, comment=""}
+bundle(
+  feature(
+    title = "Pivot String Long",
+    as_a = "user of pivot_string_long()",
+    i_want = "to specify a text column and a pattern",
+    so_that = "peform computations on the unique items."
+  ),
+  background(
+    title = "Input text data", 
+    given = "a string or vector [string] with text columns", 
+    and = "a specified pattern [sep]"),
+  
+  input = c("one-two-three")
+)
+```
+
+If we know we know what we the `output` table should look like, we can include it with the `scenario`: We can convert `output` to a Gherkin-style table using `with_table()`:
+
+```{r , echo = FALSE}
+output <- data.frame(
+    unique_items = c("one", "two", "three"),
+    string = c("one-two-three", NA, NA))
+```
+
+```{r , eval=FALSE, echo=TRUE}
+with_table(output)
+```
+
+```{r , eval=TRUE, echo=FALSE, comment=""}
+with_table(output)
+```
+
+
+`with_table()` creates a slightly modified `knitr::kable(format = "pipe", align = "l")` table we can include in a `bundle()` with the `background` and `feature`:
+
+```{r , eval=FALSE}
+bundle(
+scenario(
+    title = "Split a single string with default separator",
+    given = "a character [string] 'one-two-three'",
+    when = "I pass the [string] to pivot_string_long()",
+    then = "Then [unique_items] column should contain rows: 'one, two, three'",
+    and = "[string] column should contain the original 'one-two-three'"
+  ),
+output = c("
+      |unique_items |string        |
+      |-------------|--------------|
+      |one          |one-two-three |
+      |two          |NA            |
+      |three        |NA            |
+          ")
+)
+```
+
+This makes it easier to view them in RMarkdown or Quarto files (with `echo` set to `FALSE` and `comment` set to `""`)
+
+Now our `background`, `feature`, `scenario` (and tables) are in the Gherkin-style format that can be placed in a R Markdown file and nicely rendered for stakeholders or non-technical audiences: 
+
+```{r , eval=TRUE, echo=FALSE, comment=""}
+bundle(
+  feature(
+    title = "Pivot String Long",
+    as_a = "user of pivot_string_long()",
+    i_want = "to specify a text column and a pattern",
+    so_that = "peform computations on the unique items."
+  ),
+  background(
+    title = "Input text data", 
+    given = "a string or vector [string] with text columns", 
+    and = "a specified pattern [sep]"),
+  
+  input = c("one-two-three"),
+  
+  scenario(
+    title = "Split a single string with default separator",
+    given = "a character [string] 'one-two-three'",
+    when = "I pass the [string] to pivot_string_long()",
+    then = "Then [unique_items] column should contain rows: 'one, two, three'",
+    and = "[string] column should contain the original 'one-two-three'"
+  ),
+  output = c("
+      |unique_items |string        |
+      |-------------|--------------|
+      |one          |one-two-three |
+      |two          |NA            |
+      |three        |NA            |")
+)
+```
+
+Now our [test file](https://github.com/mjfrigaard/pickler/blob/main/tests/testthat/test-pivot_string_long.R) contains a fully scoped test with everything documented:
+
+```{r}
+describe(
+bundle(
+  feature(
+    title = "Pivot String Long",
+    as_a = "user of pivot_string_long()",
+    i_want = "to specify a text column and a pattern",
+    so_that = "peform computations on the unique items."
+  ),
+  background(
+    title = "Input text data",
+    given = "a string or vector [string] with text columns",
+    and = "a specified pattern [sep]"),
+
+  input = c("one-two-three")), code = {
+
+it(
+ bundle(
+  scenario(
+    title = "Split a single string with default separator",
+    given = "a character [string] 'one-two-three'",
+    when = "I pass the [string] to pivot_string_long()",
+    then = "Then [unique_items] column should contain rows: 'one, two, three'",
+    and = "[string] column should contain the original 'one-two-three'"
+  ),
+  output = c("
+      |unique_items |string        |
+      |-------------|--------------|
+      |one          |one-two-three |
+      |two          |NA            |
+      |three        |NA            |")
+   ), code = {
+        
+  input <- c("one-two-three")
+  # create observed output
+  observed <- pivot_string_long(input)
+  
+  # compare against output
+  output <- data.frame(
+    unique_items = c("one", "two", "three"),
+    string = c("one-two-three", NA, NA))
+  
+  expect_equal(object = observed, expected = output)
+
+})
+
+})
+```
+
+And... 
+
+```{r , eval=FALSE}
+devtools:::test_active_file()
+```
+
+it passes!
+
+```{verbatim}
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 1 ]
+```
+
