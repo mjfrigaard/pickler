@@ -33,7 +33,7 @@ library(testthat)
 ```
 
 
-## Tables
+## Inputs
 
 It's also possible to provide a table in a scenario or feature. Let's assume we have a small `input` that illustrates an example behavior for our `pivot_string_long()` function:
 
@@ -80,6 +80,8 @@ bundle(
   input = c("one-two-three")
 )
 ```
+
+## Outputs 
 
 If we know we know what we the `output` table should look like, we can include it with the `scenario`: We can convert `output` to a Gherkin-style table using `with_table()`:
 

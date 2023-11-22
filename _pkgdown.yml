@@ -2,3 +2,56 @@ url: https://mjfrigaard.github.io/pickler/
 template:
   bootstrap: 5
 
+navbar:
+ components:
+   articles:
+    text: Articles
+    menu:
+    - text: Start
+    - text: Getting started
+      href: articles/start.html
+    - text: -------
+    - text: "Workflow"
+    - text: Test development
+      href: articles/workflow.html
+    - text: "BDD"
+    - text: BDD example
+      href: articles/bdd-use-case.html
+    - text: -------
+    - text: "Examples"
+    - text: Bundling
+      href: articles/bundling.html
+    - text: Tables
+      href: articles/tables.html
+
+reference:
+- title: Background
+  desc:  Provide context and preconditions for tests.
+- contents:
+  - starts_with("background")
+- title: Scenarios
+  desc:  Illustrate a concrete example.
+- contents:
+  - starts_with("scenario")
+- title: Features
+  desc:  A deliverable behavior or functionality.
+- contents:
+  - starts_with("feature")
+- title: Bundle
+  desc:  Combine features, background, and scenario.
+- contents:
+  - starts_with("bundle")
+- title: Tables
+  desc:  Add tables to features, background, and scenario.
+- contents:
+  - starts_with("with_table")
+- title: Functions for testing
+  desc:  A collection of functions for testing
+- contents:
+  - check_string
+  - pickler_logo
+  - pickler_logo2
+  - pivot_string_long
+  - process_text
+  - split_cols
+  - rev_string

@@ -15,6 +15,7 @@ Imports:
     glue,
     htmltools,
     knitr,
+    readr,
     rlang
 Suggests: 
     rmarkdown,

@@ -6,13 +6,12 @@
 \usage{
 pickler_logo2()
 }
-\arguments{
-\item{size}{header size ("h1", "h2", "h3", "h4", "h5", "h6")}
-}
 \value{
 text logo
 }
 \description{
 logo with \verb{'}
 }
-\keyword{internal}
+\examples{
+pickler_logo2()
+}
