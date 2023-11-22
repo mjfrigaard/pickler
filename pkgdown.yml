@@ -3,9 +3,11 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   bdd-use-case: bdd-use-case.html
+  bundling: bundling.html
   start: start.html
+  tables: tables.html
   workflow: workflow.html
-last_built: 2023-11-22T18:07Z
+last_built: 2023-11-22T18:51Z
 urls:
   reference: https://mjfrigaard.github.io/pickler/reference
   article: https://mjfrigaard.github.io/pickler/articles
