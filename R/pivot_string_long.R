@@ -44,6 +44,12 @@
 #'                     "The first part of the plan needs changing." ))
 pivot_string_long <- function(string, sep = "[^[:alnum:]]+") {
 
+  # verify inputs
+  stopifnot(exprs = {
+    "'string' must be a string" = is.character(string)
+    "'sep' must be a string" = is.character(sep)
+    })
+
   pivot_string <- function(string, sep) {
       string_items <- unlist(strsplit(unname(string), sep))
       string_col <- c(string, rep(NA_character_, times = length(string_items) - 1))

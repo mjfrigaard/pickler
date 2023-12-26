@@ -47,6 +47,9 @@ feature_build <- function(title, as_a, i_want, so_that) {
 #'         so_that = "I can visualize the impact of my customizations")
 feature <- function(title, as_a, i_want, so_that) {
   glue::glue_collapse(
-    feature_build(title = title, as_a = as_a, i_want = i_want, so_that = so_that)
+    feature_build(title = title,
+                  as_a = as_a,
+                  i_want = i_want,
+                  so_that = so_that)
   )
 }

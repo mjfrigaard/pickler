@@ -1,16 +1,16 @@
-describe("Feature: Splitting Columns in data.frame
+describe("Feature: Splitting Columns in Data Frame
   As a data analyst,
   I want to split a specified column into multiple columns based on a pattern
   So that I can analyze the separated data more effectively.", code = {
 
     it("Scenario A: Split a column using the default pattern and prefix
-    Given a data.frame with a specific column
+    Given a data frame with a specific column
     And a default pattern '[^[:alnum:]]+'
     And a default column prefix 'col'
     When I call the split_cols() function on this column
     Then the column should be split into multiple columns based on the pattern
     And each new column should have the 'col' prefix followed by a sequence number
-    And the new columns should be appended to the original data.frame", code = {
+    And the new columns should be appended to the original data frame", code = {
 
       input_data <- data.frame(example_col = c("a-b-c", "d-e-f", "g-h-i"))
 
@@ -23,13 +23,13 @@ describe("Feature: Splitting Columns in data.frame
       expect_equal(observed$col_3, c("c", "f", "i"))
 
     })
-  it("Scenario B: Split a column in a data.frame using a custom pattern
-      Given a data.frame with a specific column
+  it("Scenario B: Split a column in a data frame using a custom pattern
+      Given a data frame with a specific column
       And a custom pattern specified by the user
       When I call the split_cols() function on this column with the custom pattern
       Then the column should be split into multiple columns based on the custom pattern
       And each new column should be prefixed with 'col' followed by a sequence number
-      And the new columns should be appended to the original data.frame", code = {
+      And the new columns should be appended to the original data frame", code = {
 
       input_data <- data.frame(example_col = c("a1b2c", "d3e4f", "g5h6i"))
 
@@ -41,13 +41,13 @@ describe("Feature: Splitting Columns in data.frame
       expect_equal(observed$col_2, c("b", "e", "h"))
       expect_equal(observed$col_3, c("c", "f", "i"))
     })
-  it("Scenario C: Split a column in a data.frame using a custom column prefix
-      Given a data.frame with a specific column
+  it("Scenario C: Split a column in a data frame using a custom column prefix
+      Given a data frame with a specific column
       And a custom column prefix specified by the user
       When I call the split_cols() function on this column with the custom prefix
       Then the column should be split into multiple columns based on the default pattern
       And each new column have the custom prefix followed by a sequence number
-      And the new columns should be appended to the original data.frame", code = {
+      And the new columns should be appended to the original data frame", code = {
 
 
       input_data <- data.frame(example_col = c("a:b:c", "d:e:f", "g:h:i"))
@@ -80,3 +80,12 @@ describe("Feature: Splitting Columns in data.frame
                  regexp = NULL)
     })
 })
+
+
+
+
+
+
+
+
+

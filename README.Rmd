@@ -11,6 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+library(testthat)
 ```
 
 # pickler <a href='https://mjfrigaard.github.io/pickler/'><img src='man/figures/logo.png' align="right" height="150" /></a>
@@ -34,7 +35,7 @@ library(pickler)
 ```
 
 
-```{r testthat, eval=TRUE}
+```{r testthat, eval=FALSE}
 if (!require(pak)) {
   install.packages("pak",
     repos = "http://cran.us.r-project.org"
@@ -45,6 +46,10 @@ library(testthat)
 ```
 
 ## Example
+
+Behavior-driven development (BDD) starts with a clearly defined business goal (or goals). Developers will collaborate with users to ensure each feature is aligned with a goal and is captured in a plain-language, real-life scenario. Scenarios are used to write tests to verify the feature behaves as expected, creating up-to-date documentation on how the software works (and what it can do). 
+
+`pickler` automates this process by compiling the features (in `describe()`), scenarios (in `it()` and `test_that()`), and expectations (`expect_*()` functions) into a `FEATURE.md` markdown report.
 
 `testthat`'s BDD functions allow for more explicit descriptions of tests: 
 

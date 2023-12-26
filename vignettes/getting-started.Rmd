@@ -1,0 +1,40 @@
+---
+title: "Getting started"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup-pickler, eval=FALSE, echo=FALSE}
+install.packages("pak", repos = "http://cran.us.r-project.org")
+pak::pkg_install("mjfrigaard/pickler", 
+  upgrade = TRUE, ask = FALSE)
+```
+
+```{r setup-testthat, eval=FALSE, echo=FALSE}
+pak::pkg_install("r-lib/testthat", 
+  upgrade = TRUE, ask = FALSE)
+```
+
+```{r pkgs}
+library(pickler)
+library(testthat)
+```
+
+## Overview
+
+`pickler` has two goals: easily write Gherkin-style features and scenarios, and extract features and scenarios from `testthat`'s BDD functions (`describe()` and `it()`). 
+
+I thought a useful function API would include a function per keyword, followed by a single line of text, 

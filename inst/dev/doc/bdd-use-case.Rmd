@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   error = TRUE
 )
-# Make sure you have the latest version of `estthat and sloop installed.
+# Make sure you have the latest version of testthat and sloop installed.
 # if (!require(sloop)) {
 #   install.packages("sloop",
 #     repos = "http://cran.us.r-project.org"
@@ -114,22 +114,22 @@ We can see `describe()` returns a `NULL` value instead of the logical comparison
 I'll use a known issue with `expect_snapshot()` and `test_that()` to demonstrate how `describe()` saves the day. Assume we have a function that generates output too complex to test with `expect_equal()`:
 
 ```{r, comment="#>"}
-pickler_logo()
+logo()
 ```
 
-We don't want to visually inspect differences in `pickler_logo()`, so we'll use a snapshot test to capture a baseline for comparison. Let's start with `test_that()`
+We don't want to visually inspect differences in `logo()`, so we'll use a snapshot test to capture a baseline for comparison. Let's start with `test_that()`
 
 ### Initial test_that() snapshot test
 
-I've included a feature description in the `desc` argument for `pickler_logo()`:
+I've included a feature description in the `desc` argument for `logo()`:
 
 ```{r, eval=FALSE}
 test_that("
   Feature: Text-based Logo Generation
-  As a user who calls the pickler_logo() function
+  As a user who calls the logo() function
   I want to generate a text-based logo
   So that I can quickly insert the pickler logo", code = {
-        expect_snapshot(pickler_logo())
+        expect_snapshot(logo())
       })
 ```
 
@@ -141,12 +141,12 @@ After the initial call to `test_active_file()`, `testthat` tells us the location
 
 ```markdown
 # Feature: Text-based Logo Generation
-  As a user who calls the pickler_logo() function
+  As a user who calls the logo() function
   I want to generate a text-based logo
   So that I can quickly insert the pickler logo
 
     Code
-      pickler_logo()
+      logo()
     Output
       
                    d8b          888      888
@@ -166,18 +166,18 @@ After the initial call to `test_active_file()`, `testthat` tells us the location
 
 ### Subsequent test_that() test runs
 
-Later, we change `pickler_logo()` by replacing the `\"` with `'`.[^pickler-logo-change] After loading the changes, we notice that when we run the test again a *new snapshot file* is generated (and updated with the a new version of the logo):
+Later, we change `logo()` by replacing the `\"` with `'`.[^pickler-logo-change] After loading the changes, we notice that when we run the test again a *new snapshot file* is generated (and updated with the a new version of the logo):
 
 [^pickler-logo-change]: You can view the changed version of the function [here](https://github.com/mjfrigaard/pickler/blob/072a41c82ea3807d7b3097917d67ac21a139cf30/R/pickler_logo.R#L27)
 
 ```markdown
 # Feature: Text-based Logo Generation
-  As a user who calls the pickler_logo() function
+  As a user who calls the logo() function
   I want to generate a text-based logo
   So that I can quickly insert the pickler logo
 
     Code
-      pickler_logo()
+      logo()
     Output
       
                    d8b          888      888
@@ -241,8 +241,8 @@ describe(
     As a user who calls the text_logo() function
     I want to generate a text-based logo
     So that I can quickly insert the pickler logo", code = {
-      test_that("pickler_logo()", code = {
-        expect_snapshot(pickler_logo())
+      test_that("logo()", code = {
+        expect_snapshot(logo())
       })
 })
 ```
@@ -255,7 +255,7 @@ devtools::test_active_file()
 ```{verbatim}
 [ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
 
-── Failure (test-pickler_logo.R:8:9): pickler_logo ─────────────────────────────
+── Failure (test-logo.R:8:9): pickler_logo ─────────────────────────────
 Snapshot of code has changed:
 old[6:15] vs new[6:15]
                  Y8P          888      888

@@ -31,17 +31,22 @@ if (!require(pak)) {
     repos = "http://cran.us.r-project.org"
   )
 }
-#> Loading required package: pak
 pak::pkg_install("r-lib/testthat", upgrade = TRUE, ask = FALSE)
-#> ℹ Loading metadata database
-#> ✔ Loading metadata database ... done
-#>  
-#> ℹ No downloads are needed
-#> ✔ 1 pkg + 32 deps: kept 33 [9.2s]
 library(testthat)
 ```
 
 ## Example
+
+Behavior-driven development (BDD) starts with a clearly defined business
+goal (or goals). Developers will collaborate with users to ensure each
+feature is aligned with a goal and is captured in a plain-language,
+real-life scenario. Scenarios are used to write tests to verify the
+feature behaves as expected, creating up-to-date documentation on how
+the software works (and what it can do).
+
+`pickler` automates this process by compiling the features (in
+`describe()`), scenarios (in `it()` and `test_that()`), and expectations
+(`expect_*()` functions) into a `FEATURE.md` markdown report.
 
 `testthat`’s BDD functions allow for more explicit descriptions of
 tests:

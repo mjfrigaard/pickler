@@ -1,44 +1,23 @@
-describe(
-bundle(
-  feature(
-    title = "Pivot String Long",
-    as_a = "user of pivot_string_long()",
-    i_want = "to specify a text column and a pattern",
-    so_that = "peform computations on the unique items."
-  ),
-  background(
-    title = "Input text data",
-    given = "a string or vector [string] with text columns",
-    and = "a specified pattern [sep]"),
+describe("Feature: Pivot Single String into Long Format
+  As a user,
+  I want to pivot a single string into a long-format data.frame based on a separator
+  So that I can analyze each unique item in the string separately",
+  code = {
+    it("Scenario 1: Pivot a single string using a default separator
+               Given a single string 'a-b-c'
+               And a default separator: [^[:alnum:]]+
+               When I call the pivot_string_long() function with this string
+               Then pivot_string_long() should return a data.frame with 'unique_items' and 'string' columns
+               And the data.frame should contain each unique item from the string
+               And the 'string' column should contain the original string for each unique item",
+      code = {
+          input_string <- "a-b-c"
+          observed <- pivot_string_long(input_string)
 
-  input = c("one-two-three")), code = {
-
-it(
- bundle(
-  scenario(
-    title = "Split a single string with default separator",
-    given = "a character [string] 'one-two-three'",
-    when = "I pass the [string] to pivot_string_long()",
-    then = "Then [unique_items] column should contain rows: 'one, two, three'",
-    and = "[string] column should contain the original 'one-two-three'"
-  ),
-  output = c(
-          "
-      |unique_items |string        |
-      |-------------|--------------|
-      |one          |one-two-three |
-      |two          |NA            |
-      |three        |NA            |
-          ")), code = {
-  input <- c("one-two-three")
-  # create observed output
-  observed <- pivot_string_long(input)
-  # compare against output
-  output <- data.frame(
-    unique_items = c("one", "two", "three"),
-    string = c("one-two-three", NA, NA))
-  expect_equal(object = observed, expected = output)
-
-})
-
+          expect_true(is.data.frame(observed)) #L17
+          expect_equal(names(observed), c("unique_items", "string"))
+          expect_equal(nrow(observed), 3)
+          expect_equal(observed$unique_items, c("a", "b", "c"))
+          expect_equal(observed$string, c("a-b-c", NA, NA))
+    })
 })
